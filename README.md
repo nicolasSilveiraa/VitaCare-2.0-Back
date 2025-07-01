@@ -1,5 +1,5 @@
 # Projeto-TCC - BackEnd
-Projeto TCSS para TCS
+Projeto TCC para TCS
 
 # Backend - Spring Boot
 
