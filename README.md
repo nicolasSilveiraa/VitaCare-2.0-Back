@@ -9,7 +9,7 @@ Este é o backend da aplicação, desenvolvido com Spring Boot. Ele fornece uma 
 
 ## 🚀 Tecnologias
 
-- Java 18+
+- Java 17
 - Spring Boot 3
 - Spring Data JPA
 - Spring Security (JWT)
