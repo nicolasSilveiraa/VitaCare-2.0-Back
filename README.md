@@ -23,6 +23,7 @@ Este é o backend da aplicação, desenvolvido com Spring Boot. Ele fornece uma 
 ## 📁 Estrutura de Pacotes
 
 com.exemplo.projeto
+
 ├── config # Configurações gerais (segurança, CORS, Swagger)
 
 ├── controller # Controllers REST
