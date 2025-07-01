@@ -24,11 +24,18 @@ Este é o backend da aplicação, desenvolvido com Spring Boot. Ele fornece uma 
 
 com.exemplo.projeto
 ├── config # Configurações gerais (segurança, CORS, Swagger)
+
 ├── controller # Controllers REST
+
 ├── dto # Objetos de Transferência de Dados
+
 ├── exception # Tratamento global de erros
+
 ├── model # Entidades JPA
+
 ├── repository # Interfaces do Spring Data
+
 ├── service # Regras de negócio
+
 └── mapper # Conversão entre DTO e Entidade
 
