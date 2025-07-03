@@ -13,9 +13,8 @@ Este é o backend da aplicação, desenvolvido com Spring Boot. Ele fornece uma 
 - Spring Boot 3
 - Spring Data JPA
 - Spring Security (JWT)
-- SQL Server
+- Postgre SQL
 - Maven
-- MapStruct (opcional)
 - Swagger/OpenAPI
 
 ---
