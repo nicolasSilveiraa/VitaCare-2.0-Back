@@ -1,0 +1,40 @@
+# ===================================================================
+# TEMPLATE .PROPERTIES PARA NOVOS MICROSERVIÇOS
+# Este servico ficará alocado dentro por enquanto para continuar os microservicos localmente com conexao Neon postgreSQL
+# ===================================================================
+
+
+# O DESENVOLVEDOR SÓ PRECISA MUDAR ESTA SEÇÃO
+# ===================================================================
+spring.application.name=template-sevice
+server.port=8082
+
+# Conectando com o Neon
+
+Em Dashboards -> Connect -> Especificar a Branch para development (ideal) e mudar de psql para Java -> Copy snippet e colar
+spring.datasource.url=jdbc:postgresql://<SEU_USUARIO>:<SUA_SENHA>@<SEU_HOST_NEON>/projeto?sslmode=require
+
+Na branch conectada, ir em SQLEditor -> digitar CREATE schema XXXX
+spring.jpa.properties.hibernate.default_schema=templatesq
+# ===================================================================
+
+
+# -- NÃO MEXER ABAIXO DESTA LINHA --
+
+# 1. Diz para importar a configuração do Config Server
+spring.config.import=optional:configserver:
+
+# 2. Habilita a busca do Config Server via Eureka
+spring.cloud.config.discovery.enabled=true
+
+# 3. Diz qual é o nome do serviço do Config Server no Eureka
+spring.cloud.config.discovery.service-id=config-server
+
+# 4. Informa como encontrar o Eureka
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka
+
+spring.jpa.hibernate.ddl-auto=update
+
+# --- Configuração de Inicialização de Dados ---
+# 'always': Garante que o script 'data.sql' seja sempre executado.
+spring.sql.init.mode=always
