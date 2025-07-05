@@ -27,9 +27,8 @@ public class PacienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PacienteModel> editarFuncionario(@RequestBody PacienteCreateRequest pacienteCreateRequest, @PathVariable Long id) {
-        PacienteModel pacienteAtualizado = pacienteService.atualizarPaciente(id, pacienteCreateRequest);
-        return ResponseEntity.ok(pacienteAtualizado);
+    public void editarFuncionario(@RequestBody PacienteCreateRequest pacienteCreateRequest, @PathVariable Long id) throws Exception {
+      pacienteService.atualizarPaciente(id, pacienteCreateRequest);
     }
 
     @DeleteMapping("/{id}")

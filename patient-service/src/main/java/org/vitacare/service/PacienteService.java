@@ -35,31 +35,15 @@ public class PacienteService {
         paciente.save(pacienteModel);
     }
 
-    public PacienteModel atualizarPaciente(Long id, PacienteCreateRequest request) {
+    public void atualizarPaciente(Long id, PacienteCreateRequest pacienteCreateRequest) throws Exception{
+        Optional<PacienteModel>pacienteExiste = paciente.findById(id);
 
-        PacienteModel pacienteExistente = paciente.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Paciente com ID " + id + " não encontrado."));
-
-        pacienteExistente.setNomePaciente(request.getNomePaciente());
-        pacienteExistente.setDataNascimento(request.getDataNascimento());
-        pacienteExistente.setNaturalidadePaciente(request.getNaturalidadePaciente());
-        pacienteExistente.setSexoPaciente(request.getSexoPaciente());
-        pacienteExistente.setEstadoCivilPaciente(request.getEstadoCivilPaciente());
-        pacienteExistente.setCpfPaciente(request.getCpfPaciente());
-        pacienteExistente.setRgPaciente(request.getRgPaciente());
-        pacienteExistente.setEmissorRgPaciente(request.getEmissorRgPaciente());
-        pacienteExistente.setEndereco(request.getEndereco());
-        pacienteExistente.setConvenioCliente(request.getConvenioCliente());
-        pacienteExistente.setPlanoPaciente(request.getPlanoPaciente());
-        pacienteExistente.setValidadeConvenio(request.getValidadeConvenio());
-        pacienteExistente.setCarteirinhaPaciente(request.getCarteirinhaPaciente());
-        pacienteExistente.setAlergiasPaciente(request.getAlergiasPaciente());
-        pacienteExistente.setQueixasPaciente(request.getQueixasPaciente());
-        pacienteExistente.setDiagnosticoPaciente(request.getDiagnosticoPaciente());
-        pacienteExistente.setPrescricaoPaciente(request.getPrescricaoPaciente());
-        pacienteExistente.setStatusPaciente(request.getStatusPaciente());
-
-        return paciente.save(pacienteExistente);
+        if (pacienteExiste.isEmpty()) {
+            throw new Exception("Paciente com o id: " + id + " não encontrado");
+        }
+        PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
+        pacienteModel.setIdPaciente(id);
+        paciente.save(pacienteModel);
     }
 
     public void removerPaciente(Long id) {
