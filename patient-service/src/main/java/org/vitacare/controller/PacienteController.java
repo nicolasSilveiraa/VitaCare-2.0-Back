@@ -1,6 +1,7 @@
 package org.vitacare.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.vitacare.dto.PacienteCreateRequest;
 import org.vitacare.model.PacienteModel;
@@ -23,6 +24,17 @@ public class PacienteController {
     @PostMapping
     public void adicionarPaciente(@RequestBody PacienteCreateRequest pacienteCreateRequest) throws Exception{
         pacienteService.adicionarPaciente(pacienteCreateRequest);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PacienteModel> editarFuncionario(@RequestBody PacienteCreateRequest pacienteCreateRequest, @PathVariable Long id) {
+        PacienteModel pacienteAtualizado = pacienteService.atualizarPaciente(id, pacienteCreateRequest);
+        return ResponseEntity.ok(pacienteAtualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public void removerFuncionario(@PathVariable Long id) throws Exception{
+        pacienteService.removerPaciente(id);
     }
 
 }
