@@ -8,6 +8,5 @@ import org.vitacare.model.PacienteModel;
 public interface PacienteRepository extends JpaRepository<PacienteModel, Long> {
 
     Boolean existsByNomePaciente(String nome);
-    Boolean existsByCpfPaciente(String cpfPaciente);
 
 }
