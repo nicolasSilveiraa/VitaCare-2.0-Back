@@ -21,8 +21,8 @@ public class PacienteController {
     }
 
     @GetMapping("/{id}")
-    public void buscarPacientePorId(@PathVariable Long id) throws Exception{
-        pacienteService.buscarPacientePorId(id);
+    public PacienteModel buscarPacientePorId(@PathVariable Long id) throws Exception{
+       return pacienteService.buscarPacientePorId(id);
     }
 
     @PostMapping
