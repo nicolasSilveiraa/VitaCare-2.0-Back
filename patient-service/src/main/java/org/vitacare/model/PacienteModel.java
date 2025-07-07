@@ -2,6 +2,7 @@ package org.vitacare.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.vitacare.model.Enum.StatusDoPaciente;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -72,5 +73,6 @@ public class PacienteModel {
     private String prescricaoPaciente;
 
     @Column(name = "status")
-    private String statusPaciente;
+    @Enumerated(EnumType.STRING)
+    private StatusDoPaciente statusPaciente;
 }

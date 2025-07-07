@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.vitacare.model.Enum.StatusDoPaciente;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -32,5 +33,5 @@ public class PacienteCreateRequest {
     private String queixasPaciente;
     private String diagnosticoPaciente;
     private String prescricaoPaciente;
-    private String statusPaciente;
+    private StatusDoPaciente statusPaciente;
 }
