@@ -1,17 +1,14 @@
 package org.vitacare.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.vitacare.dto.PacienteCreateRequest;
+import org.vitacare.model.Enum.StatusDoPaciente;
 import org.vitacare.model.PacienteModel;
 import org.vitacare.repository.PacienteRepository;
 
 import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 
 @Service
@@ -26,33 +23,73 @@ public class PacienteService {
         return paciente.findAll();
     }
 
-    public void adicionarPaciente(PacienteCreateRequest pacienteCreateRequest) throws Exception{
+    public PacienteModel buscarPacientePorId(Long id) throws Exception {
+        verificarPacienteExiste(id);
+        return paciente.findById(id).get();
+    }
+
+    public void verificarPacienteExiste(Long id) throws Exception{
+        if (!paciente.existsById(id)) {
+            throw new Exception("Paciente com o id: " + id + " não encontrado");
+        }
+    }
+
+    private void verificarPacienteCriado(PacienteCreateRequest pacienteCreateRequest) throws Exception {
         Boolean byNome = paciente.existsByNomePaciente(pacienteCreateRequest.getNomePaciente());
         if (byNome) {
             throw new Exception("Paciente já registrado");
         }
+    }
+
+    public void adicionarPaciente(PacienteCreateRequest pacienteCreateRequest) throws Exception{
+        verificarPacienteCriado(pacienteCreateRequest);
         PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
+        pacienteModel.setStatusPaciente(StatusDoPaciente.AGUARDANDO_TRIAGEM);
         paciente.save(pacienteModel);
     }
 
     public void atualizarPaciente(Long id, PacienteCreateRequest pacienteCreateRequest) throws Exception{
-        Optional<PacienteModel>pacienteExiste = paciente.findById(id);
-
-        if (pacienteExiste.isEmpty()) {
-            throw new Exception("Paciente com o id: " + id + " não encontrado");
-        }
+        verificarPacienteExiste(id);
         PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
         pacienteModel.setIdPaciente(id);
         paciente.save(pacienteModel);
     }
 
-    public void removerPaciente(Long id) {
-
-        if (!paciente.existsById(id)) {
-            throw new EntityNotFoundException("Paciente com ID " + id + " não encontrado, não foi possível remover.");
-        }
-
+    public void removerPaciente(Long id) throws Exception {
+        verificarPacienteExiste(id);
         paciente.deleteById(id);
     }
+
+    public void realizarTriagem(Long id, PacienteCreateRequest pacienteCreateRequest) throws Exception {
+        verificarPacienteExiste(id);
+        verificarTriagemRealizada(pacienteCreateRequest);
+        PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
+        pacienteModel.setIdPaciente(id);
+        pacienteModel.setStatusPaciente(StatusDoPaciente.AGUARDANDO_CONSULTA);
+        paciente.save(pacienteModel);
+    }
+
+    public void verificarTriagemRealizada(PacienteCreateRequest pacienteCreateRequest) throws Exception{
+        PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
+        if(!pacienteModel.getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_TRIAGEM)){
+            throw new Exception("Paciente não está aguardando triagem");
+        }
+    }
+
+    public void realizarConsulta(Long id, PacienteCreateRequest pacienteCreateRequest) throws Exception {
+        verificarConsultaRealizada(pacienteCreateRequest);
+        PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
+        pacienteModel.setIdPaciente(id);
+        pacienteModel.setStatusPaciente(StatusDoPaciente.CONSULTA_REALIZADA);
+        paciente.save(pacienteModel);
+    }
+
+    public void verificarConsultaRealizada(PacienteCreateRequest pacienteCreateRequest) throws Exception {
+        PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
+        if (!pacienteModel.getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_CONSULTA)) {
+            throw new Exception("Paciente não está aguardando consulta");
+        }
+    }
+
 
 }
