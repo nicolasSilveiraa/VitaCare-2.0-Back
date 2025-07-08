@@ -103,36 +103,36 @@ public class PacienteService {
     }
 
 
-
-    public Page<PacienteCreateRequest> getFiltro(PacienteFilterRequest filtro, Pageable pageable) {
-
-        String nomePaciente = extractNomePaciente(filtro);
-        String cpf = extractCpfPaciente(filtro);
-        StatusDoPaciente statusDoPaciente = extractStatusPaciente(filtro);
-        String search = filtro.getSearch();
-
-
-        String busca = filtro.getSearch();
-        if (busca != null && !busca.isEmpty()) {
-            busca = "%" + busca + "%";
-        }else {
-            busca = null;
-        }
+//TODO Realizar a construção do filtro
+//    public Page<PacienteCreateRequest> getFiltro(PacienteFilterRequest filtro, Pageable pageable) {
+//
+//        String nomePaciente = extractNomePaciente(filtro);
+//        String cpf = extractCpfPaciente(filtro);
+//        StatusDoPaciente statusDoPaciente = extractStatusPaciente(filtro);
+//        String search = filtro.getSearch();
+//
+//
+//        String busca = filtro.getSearch();
+//        if (busca != null && !busca.isEmpty()) {
+//            busca = "%" + busca + "%";
+//        }else {
+//            busca = null;
+//        }
 //        Page<PacienteCreateRequest> results = pacienteRepository.
-
-    }
-
-    private String extractNomePaciente(PacienteFilterRequest filtro) {
-        return (filtro != null) ? filtro.getNomePaciente() : null;
-    }
-
-    private String extractCpfPaciente(PacienteFilterRequest filtro) {
-        return (filtro != null) ? filtro.getCpf() : null;
-    }
-
-    private StatusDoPaciente extractStatusPaciente(PacienteFilterRequest filtro) {
-        return (filtro != null) ? filtro.getStatusDoPaciente() : null;
-    }
+//
+//    }
+//
+//    private String extractNomePaciente(PacienteFilterRequest filtro) {
+//        return (filtro != null) ? filtro.getNomePaciente() : null;
+//    }
+//
+//    private String extractCpfPaciente(PacienteFilterRequest filtro) {
+//        return (filtro != null) ? filtro.getCpf() : null;
+//    }
+//
+//    private StatusDoPaciente extractStatusPaciente(PacienteFilterRequest filtro) {
+//        return (filtro != null) ? filtro.getStatusDoPaciente() : null;
+//    }
 
 
 

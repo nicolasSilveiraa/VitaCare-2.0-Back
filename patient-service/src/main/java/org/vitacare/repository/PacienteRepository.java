@@ -13,14 +13,14 @@ public interface PacienteRepository extends JpaRepository<PacienteModel, Long> {
 
     Boolean existsByNomePaciente(String nome);
 
-    Page<PacienteCreateRequest> findFilter(
-
-            @Param("nome") String nomePaciente,
-            @Param("cpf") String cpfPaciente,
-            @Param("id") Long id,
-            @Param("")
-
-    );
+//    Page<PacienteCreateRequest> findFilter(
+//
+//            @Param("nome") String nomePaciente,
+//            @Param("cpf") String cpfPaciente,
+//            @Param("id") Long id,
+//            @Param("")
+//
+//    );
 
 
     //TODO colocar um método buscando por nome(usar contein) vai vir por query

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.vitacare.model.Enum.ConvenioPaciente;
 import org.vitacare.model.Enum.StatusDoPaciente;
 
 import java.time.LocalDate;
@@ -25,7 +26,7 @@ public class PacienteCreateRequest {
     private String rgPaciente;
     private String emissorRgPaciente;
     private String endereco;
-    private Boolean convenioCliente;
+    private ConvenioPaciente convenioCliente;
     private String planoPaciente;
     private LocalDate validadeConvenio;
     private String carteirinhaPaciente;
