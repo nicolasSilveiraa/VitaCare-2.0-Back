@@ -2,11 +2,10 @@ package org.vitacare.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.vitacare.model.Enum.ConvenioPaciente;
+import org.vitacare.model.Enum.ConvenioDoPaciente;
 import org.vitacare.model.Enum.StatusDoPaciente;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Getter
@@ -51,7 +50,7 @@ public class PacienteModel {
 
     @Column(name = "convenio")
     @Enumerated(EnumType.STRING)
-    private ConvenioPaciente convenioCliente;
+    private ConvenioDoPaciente convenioCliente;
 
     @Column(name = "nome_plano")
     private String planoPaciente;
