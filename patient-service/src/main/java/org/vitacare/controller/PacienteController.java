@@ -3,6 +3,7 @@ package org.vitacare.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.vitacare.dto.PacienteCreateRequest;
+import org.vitacare.dto.TriagemRequest;
 import org.vitacare.model.PacienteModel;
 import org.vitacare.service.PacienteService;
 import java.util.List;
@@ -41,13 +42,13 @@ public class PacienteController {
     }
 
     @PatchMapping("/triagem/{id}")
-    public void realizarTriagem(@RequestBody PacienteCreateRequest pacienteCreateRequest, @PathVariable Long id) throws Exception{
-        pacienteService.realizarTriagem(id, pacienteCreateRequest);
+    public void realizarTriagem(@RequestBody TriagemRequest TriagemRequest, @PathVariable Long id) throws Exception{
+        pacienteService.realizarTriagem(id, TriagemRequest);
     }
 
     @PatchMapping("/consulta/{id}")
-    public void realizarConsulta(@RequestBody PacienteCreateRequest pacienteCreateRequest, @PathVariable Long id) throws Exception {
-        pacienteService.realizarConsulta(id, pacienteCreateRequest);
+    public void realizarConsulta(@RequestBody TriagemRequest TriagemRequest, @PathVariable Long id) throws Exception {
+        pacienteService.realizarConsulta(id, TriagemRequest);
     }
 
 

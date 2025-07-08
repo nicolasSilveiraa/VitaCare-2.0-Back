@@ -7,16 +7,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.vitacare.dto.PacienteCreateRequest;
 import org.vitacare.dto.PacienteFilterRequest;
+import org.vitacare.dto.TriagemRequest;
+import org.vitacare.exception.ConsultaStatusException;
+import org.vitacare.exception.PacienteNaoEncontradoException;
+import org.vitacare.exception.PacienteRegistradoException;
+import org.vitacare.exception.TriagemStatusException;
 import org.vitacare.model.Enum.StatusDoPaciente;
 import org.vitacare.model.PacienteModel;
 import org.vitacare.repository.PacienteRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 @RequiredArgsConstructor
-
 public class PacienteService {
 
     private final PacienteRepository paciente;
@@ -34,14 +39,14 @@ public class PacienteService {
 
     public void verificarPacienteExiste(Long id) throws Exception{
         if (!paciente.existsById(id)) {
-            throw new Exception("Paciente com o id: " + id + " não encontrado");
+            throw new PacienteNaoEncontradoException(id);
         }
     }
 
     private void verificarPacienteCriado(PacienteCreateRequest pacienteCreateRequest) throws Exception {
         Boolean byNome = paciente.existsByNomePaciente(pacienteCreateRequest.getNomePaciente());
         if (byNome) {
-            throw new Exception("Paciente já registrado");
+            throw new PacienteRegistradoException();
         }
     }
 
@@ -71,34 +76,32 @@ public class PacienteService {
         paciente.deleteById(id);
     }
 
-    public void realizarTriagem(Long id, PacienteCreateRequest pacienteCreateRequest) throws Exception {
+    public void realizarTriagem(Long id) throws Exception {
         verificarPacienteExiste(id);
-        verificarTriagemRealizada(pacienteCreateRequest);
-        PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
-        pacienteModel.setIdPaciente(id);
-        pacienteModel.setStatusPaciente(StatusDoPaciente.AGUARDANDO_CONSULTA);
+        verificarTriagemRealizada(id);
+        pacienteRepository.save()
         paciente.save(pacienteModel);
     }
 
-    public void verificarTriagemRealizada(PacienteCreateRequest pacienteCreateRequest) throws Exception{
-        PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
-        if(!pacienteModel.getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_TRIAGEM)){
-            throw new Exception("Paciente não está aguardando triagem");
+    public void verificarTriagemRealizada(Long id) throws Exception{
+        Optional<PacienteModel> triagemPaciente = pacienteRepository.findById(id);
+        if (triagemPaciente.isEmpty() || !triagemPaciente.get().getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_TRIAGEM) {
+            throw new TriagemStatusException();
         }
     }
 
-    public void realizarConsulta(Long id, PacienteCreateRequest pacienteCreateRequest) throws Exception {
-        verificarConsultaRealizada(pacienteCreateRequest);
-        PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
+    public void realizarConsulta(Long id, TriagemRequest triagemRequest) throws Exception {
+        verificarConsultaRealizada(triagemRequest);
+        PacienteModel pacienteModel = objectMapper.convertValue(triagemRequest, PacienteModel.class);
         pacienteModel.setIdPaciente(id);
         pacienteModel.setStatusPaciente(StatusDoPaciente.CONSULTA_REALIZADA);
         paciente.save(pacienteModel);
     }
 
-    public void verificarConsultaRealizada(PacienteCreateRequest pacienteCreateRequest) throws Exception {
-        PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
+    public void verificarConsultaRealizada(TriagemRequest triagemRequest) throws Exception {
+        PacienteModel pacienteModel = objectMapper.convertValue(triagemRequest, PacienteModel.class);
         if (!pacienteModel.getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_CONSULTA)) {
-            throw new Exception("Paciente não está aguardando consulta");
+            throw new ConsultaStatusException();
         }
     }
 
