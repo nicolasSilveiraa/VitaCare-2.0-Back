@@ -85,7 +85,7 @@ public class PacienteService {
 
     public void verificarTriagemRealizada(Long id) throws Exception{
         Optional<PacienteModel> triagemPaciente = pacienteRepository.findById(id);
-        if (triagemPaciente.isEmpty() || !triagemPaciente.get().getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_TRIAGEM) {
+        if (triagemPaciente.isEmpty() || !triagemPaciente.get().getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_TRIAGEM)) {
             throw new TriagemStatusException();
         }
     }
