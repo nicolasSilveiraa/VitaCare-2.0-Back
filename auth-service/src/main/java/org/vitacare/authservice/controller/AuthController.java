@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.vitacare.authservice.dto.AuthRequest;
 import org.vitacare.authservice.dto.AuthResponse;
@@ -27,5 +29,11 @@ public class AuthController {
     public ResponseEntity<AuthResponse> authenticate(@RequestBody AuthRequest request) {
         AuthResponse authResponse = authService.authenticate(request);
         return ResponseEntity.ok(authResponse);
+    }
+
+    @GetMapping("/test-secure")
+    public ResponseEntity<String> secureEndpointTest() {
+        String userEmail = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        return ResponseEntity.ok("Olá, " + userEmail + "! Você acessou um endpoint seguro.");
     }
 }
