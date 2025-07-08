@@ -78,31 +78,32 @@ public class PacienteService {
 
     public void realizarTriagem(Long id) throws Exception {
         verificarPacienteExiste(id);
-        verificarTriagemRealizada(id);
-        pacienteRepository.save()
-        paciente.save(pacienteModel);
+        PacienteModel consultaPaciente = verificarTriagemRealizada(id);
+        consultaPaciente.setStatusPaciente(StatusDoPaciente.AGUARDANDO_CONSULTA);
+        pacienteRepository.save(consultaPaciente);
     }
 
-    public void verificarTriagemRealizada(Long id) throws Exception{
+    public PacienteModel verificarTriagemRealizada(Long id) throws Exception{
         Optional<PacienteModel> triagemPaciente = pacienteRepository.findById(id);
         if (triagemPaciente.isEmpty() || !triagemPaciente.get().getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_TRIAGEM)) {
             throw new TriagemStatusException();
         }
+        return triagemPaciente.get();
     }
 
-    public void realizarConsulta(Long id, TriagemRequest triagemRequest) throws Exception {
-        verificarConsultaRealizada(triagemRequest);
-        PacienteModel pacienteModel = objectMapper.convertValue(triagemRequest, PacienteModel.class);
-        pacienteModel.setIdPaciente(id);
-        pacienteModel.setStatusPaciente(StatusDoPaciente.CONSULTA_REALIZADA);
-        paciente.save(pacienteModel);
+    public void realizarConsulta(Long id) throws Exception {
+        verificarPacienteExiste(id);
+        PacienteModel realizandoConsulta = verificarConsultaRealizada(id);
+        realizandoConsulta.setStatusPaciente(StatusDoPaciente.CONSULTA_REALIZADA);
+        pacienteRepository.save(realizandoConsulta);
     }
 
-    public void verificarConsultaRealizada(TriagemRequest triagemRequest) throws Exception {
-        PacienteModel pacienteModel = objectMapper.convertValue(triagemRequest, PacienteModel.class);
-        if (!pacienteModel.getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_CONSULTA)) {
+    public PacienteModel verificarConsultaRealizada(Long id) throws Exception {
+        Optional<PacienteModel> consultaPaciente = pacienteRepository.findById(id);
+        if (consultaPaciente.isEmpty() || !consultaPaciente.get().getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_CONSULTA)) {
             throw new ConsultaStatusException();
         }
+        return consultaPaciente.get();
     }
 
 

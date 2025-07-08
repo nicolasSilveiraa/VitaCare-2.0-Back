@@ -42,13 +42,13 @@ public class PacienteController {
     }
 
     @PatchMapping("/triagem/{id}")
-    public void realizarTriagem(@RequestBody TriagemRequest TriagemRequest, @PathVariable Long id) throws Exception{
-        pacienteService.realizarTriagem(id, TriagemRequest);
+    public void realizarTriagem(@PathVariable Long id) throws Exception{
+        pacienteService.realizarTriagem(id);
     }
 
     @PatchMapping("/consulta/{id}")
-    public void realizarConsulta(@RequestBody TriagemRequest TriagemRequest, @PathVariable Long id) throws Exception {
-        pacienteService.realizarConsulta(id, TriagemRequest);
+    public void realizarConsulta(@PathVariable Long id) throws Exception {
+        pacienteService.realizarConsulta(id);
     }
 
 
