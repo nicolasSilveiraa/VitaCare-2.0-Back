@@ -12,6 +12,7 @@ import org.vitacare.model.PacienteModel;
 public interface PacienteRepository extends JpaRepository<PacienteModel, Long> {
 
     Boolean existsByNomePaciente(String nome);
+    Boolean existsByIdPaciente(Long id);
 
 //    Page<PacienteCreateRequest> findFilter(
 //
