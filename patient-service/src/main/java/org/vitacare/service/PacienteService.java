@@ -3,14 +3,17 @@ package org.vitacare.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jdk.jshell.Diag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.vitacare.dto.ConsultaPacienteRequest;
 import org.vitacare.dto.PacienteCreateRequest;
+import org.vitacare.dto.PaginacaoPacienteRequest;
 import org.vitacare.dto.TriagemPacienteRequest;
 import org.vitacare.exception.*;
 import org.vitacare.model.Enum.StatusDoPaciente;
 import org.vitacare.model.PacienteModel;
 import org.vitacare.repository.PacienteRepository;
+//import org.vitacare.repository.PaginacaoRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +26,7 @@ public class PacienteService {
     private final PacienteRepository paciente;
     private final ObjectMapper objectMapper;
     private final PacienteRepository pacienteRepository;
+//    private final PaginacaoRepository paginacaoRepository;
 
     public List<PacienteModel> buscarPaciente(){
         return paciente.findAll();
@@ -68,17 +72,17 @@ public class PacienteService {
     public void realizarTriagem(Long id, TriagemPacienteRequest triagemPacienteRequest) throws Exception {
         verificarPacienteExiste(id);
         cadastramentoTriagem(id, triagemPacienteRequest);
-        PacienteModel consultaPaciente = verificarTriagemRealizada(id);
-        consultaPaciente.setStatusPaciente(StatusDoPaciente.AGUARDANDO_CONSULTA);
-        pacienteRepository.save(consultaPaciente);
+        Optional<PacienteModel> pacienteModel = pacienteRepository.findById(id);
+        PacienteModel paciente = pacienteModel.get();
+        verificarTriagemRealizada(paciente);
+        paciente.setStatusPaciente(StatusDoPaciente.AGUARDANDO_CONSULTA);
+        pacienteRepository.save(paciente);
     }
 
-    public PacienteModel verificarTriagemRealizada(Long id) throws Exception{
-        Optional<PacienteModel> triagemPaciente = pacienteRepository.findById(id);
-        if (triagemPaciente.isEmpty() || !triagemPaciente.get().getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_TRIAGEM)) {
+    public void verificarTriagemRealizada(PacienteModel pacienteModel) throws Exception{
+        if (!pacienteModel.getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_TRIAGEM)) {
             throw new TriagemStatusException();
         }
-        return triagemPaciente.get();
     }
 
     public void realizarConsulta(Long id, ConsultaPacienteRequest consultaPacienteRequest) throws Exception {
@@ -97,6 +101,7 @@ public class PacienteService {
         return consultaPaciente.get();
     }
 
+    //TODO Consertar os if encadeado
     public PacienteModel cadastramentoTriagem(Long id, TriagemPacienteRequest triagemPacienteRequest) throws Exception {
        Optional<PacienteModel> cadastroTriagem = pacienteRepository.findById(id);
 
@@ -125,6 +130,11 @@ public class PacienteService {
         cadastroConsulta.get().setPrescricaoPaciente(consultaPacienteRequest.getPrescricaoPaciente());
         return pacienteRepository.save(cadastroConsulta.get());
     }
+
+//    public Page<PaginacaoPacienteRequest> paginacaoPacienteRequests() {
+//
+//    }
+
 
 
 //TODO Realizar a construção do filtro
