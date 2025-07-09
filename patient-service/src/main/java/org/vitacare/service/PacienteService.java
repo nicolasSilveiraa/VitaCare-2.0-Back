@@ -1,8 +1,10 @@
 package org.vitacare.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.jshell.Diag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.vitacare.dto.ConsultaPacienteRequest;
 import org.vitacare.dto.PacienteCreateRequest;
 import org.vitacare.dto.TriagemPacienteRequest;
 import org.vitacare.exception.*;
@@ -79,8 +81,9 @@ public class PacienteService {
         return triagemPaciente.get();
     }
 
-    public void realizarConsulta(Long id) throws Exception {
+    public void realizarConsulta(Long id, ConsultaPacienteRequest consultaPacienteRequest) throws Exception {
         verificarPacienteExiste(id);
+        cadastramentoConsulta(id, consultaPacienteRequest);
         PacienteModel realizandoConsulta = verificarConsultaRealizada(id);
         realizandoConsulta.setStatusPaciente(StatusDoPaciente.CONSULTA_REALIZADA);
         pacienteRepository.save(realizandoConsulta);
@@ -109,6 +112,19 @@ public class PacienteService {
         return pacienteRepository.save(cadastroTriagem.get());
     }
 
+    public PacienteModel cadastramentoConsulta(Long id, ConsultaPacienteRequest consultaPacienteRequest) throws Exception {
+        Optional<PacienteModel> cadastroConsulta = pacienteRepository.findById(id);
+
+        if (cadastroConsulta.isEmpty() || consultaPacienteRequest.getDiagnosticoPaciente() == null) {
+            throw new DiagnosticoVazioException();
+        }
+        if (cadastroConsulta.isEmpty() || consultaPacienteRequest.getPrescricaoPaciente() == null) {
+            throw new PrescricaoVazioException();
+        }
+        cadastroConsulta.get().setDiagnosticoPaciente(consultaPacienteRequest.getDiagnosticoPaciente());
+        cadastroConsulta.get().setPrescricaoPaciente(consultaPacienteRequest.getPrescricaoPaciente());
+        return pacienteRepository.save(cadastroConsulta.get());
+    }
 
 
 //TODO Realizar a construção do filtro
