@@ -73,10 +73,9 @@ public class PacienteService {
         verificarPacienteExiste(id);
         cadastramentoTriagem(id, triagemPacienteRequest);
         Optional<PacienteModel> pacienteModel = pacienteRepository.findById(id);
-        PacienteModel paciente = pacienteModel.get();
-        verificarTriagemRealizada(paciente);
-        paciente.setStatusPaciente(StatusDoPaciente.AGUARDANDO_CONSULTA);
-        pacienteRepository.save(paciente);
+        verificarTriagemRealizada(pacienteModel.get());
+        pacienteModel.get().setStatusPaciente(StatusDoPaciente.AGUARDANDO_CONSULTA);
+        pacienteRepository.save(pacienteModel.get());
     }
 
     public void verificarTriagemRealizada(PacienteModel pacienteModel) throws Exception{
@@ -89,10 +88,9 @@ public class PacienteService {
         verificarPacienteExiste(id);
         cadastramentoConsulta(id, consultaPacienteRequest);
         Optional<PacienteModel> pacienteModel = pacienteRepository.findById(id);
-        PacienteModel paciente = pacienteModel.get();
-        verificarConsultaRealizada(paciente);
-        paciente.setStatusPaciente(StatusDoPaciente.CONSULTA_REALIZADA);
-        pacienteRepository.save(paciente);
+        verificarConsultaRealizada(pacienteModel.get());
+        pacienteModel.get().setStatusPaciente(StatusDoPaciente.CONSULTA_REALIZADA);
+        pacienteRepository.save(pacienteModel.get());
     }
 
     public void verificarConsultaRealizada(PacienteModel pacienteModel) throws Exception {
@@ -101,34 +99,40 @@ public class PacienteService {
         }
     }
 
-    //TODO Consertar os if encadeado
-    public PacienteModel cadastramentoTriagem(Long id, TriagemPacienteRequest triagemPacienteRequest) throws Exception {
+    public void cadastramentoTriagem(Long id, TriagemPacienteRequest triagemPacienteRequest) throws Exception {
        Optional<PacienteModel> cadastroTriagem = pacienteRepository.findById(id);
 
-       if (cadastroTriagem.isEmpty() || triagemPacienteRequest.getAlergiasPaciente() == null) {
+       if (cadastroTriagem.isEmpty()) {
+            throw new PacienteNaoEncontradoException(id);
+        }
+
+       if (triagemPacienteRequest.getAlergiasPaciente() == null) {
             throw new AlergiaVazioException();
         }
-        if (cadastroTriagem.isEmpty() || triagemPacienteRequest.getQueixasPaciente() == null) {
+        if (triagemPacienteRequest.getQueixasPaciente() == null) {
             throw new QueixasVazioException();
         }
 
         cadastroTriagem.get().setAlergiasPaciente(triagemPacienteRequest.getAlergiasPaciente());
         cadastroTriagem.get().setQueixasPaciente(triagemPacienteRequest.getQueixasPaciente());
-        return pacienteRepository.save(cadastroTriagem.get());
+        pacienteRepository.save(cadastroTriagem.get());
     }
 
-    public PacienteModel cadastramentoConsulta(Long id, ConsultaPacienteRequest consultaPacienteRequest) throws Exception {
+    public void cadastramentoConsulta(Long id, ConsultaPacienteRequest consultaPacienteRequest) throws Exception {
         Optional<PacienteModel> cadastroConsulta = pacienteRepository.findById(id);
 
-        if (cadastroConsulta.isEmpty() || consultaPacienteRequest.getDiagnosticoPaciente() == null) {
+        if (cadastroConsulta.isEmpty()) {
+            throw new PacienteNaoEncontradoException(id);
+        }
+        if (consultaPacienteRequest.getDiagnosticoPaciente() == null) {
             throw new DiagnosticoVazioException();
         }
-        if (cadastroConsulta.isEmpty() || consultaPacienteRequest.getPrescricaoPaciente() == null) {
+        if (consultaPacienteRequest.getPrescricaoPaciente() == null) {
             throw new PrescricaoVazioException();
         }
         cadastroConsulta.get().setDiagnosticoPaciente(consultaPacienteRequest.getDiagnosticoPaciente());
         cadastroConsulta.get().setPrescricaoPaciente(consultaPacienteRequest.getPrescricaoPaciente());
-        return pacienteRepository.save(cadastroConsulta.get());
+        pacienteRepository.save(cadastroConsulta.get());
     }
 
 //    public Page<PaginacaoPacienteRequest> paginacaoPacienteRequests() {
