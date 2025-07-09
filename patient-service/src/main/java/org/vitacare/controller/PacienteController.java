@@ -2,6 +2,7 @@ package org.vitacare.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.vitacare.dto.ConsultaPacienteRequest;
 import org.vitacare.dto.PacienteCreateRequest;
 import org.vitacare.dto.TriagemPacienteRequest;
 import org.vitacare.model.PacienteModel;
@@ -47,10 +48,7 @@ public class PacienteController {
     }
 
     @PatchMapping("/consulta/{id}")
-    public void realizarConsulta(@PathVariable Long id) throws Exception {
-        pacienteService.realizarConsulta(id);
+    public void realizarConsulta(@PathVariable Long id, @RequestBody ConsultaPacienteRequest consultaPacienteRequest) throws Exception {
+        pacienteService.realizarConsulta(id, consultaPacienteRequest);
     }
-
-
-
 }
