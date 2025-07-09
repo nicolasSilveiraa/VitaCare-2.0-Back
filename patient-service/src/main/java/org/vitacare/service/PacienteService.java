@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jdk.jshell.Diag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.vitacare.dto.ConsultaPacienteRequest;
 import org.vitacare.dto.PacienteCreateRequest;
@@ -13,7 +14,7 @@ import org.vitacare.exception.*;
 import org.vitacare.model.Enum.StatusDoPaciente;
 import org.vitacare.model.PacienteModel;
 import org.vitacare.repository.PacienteRepository;
-//import org.vitacare.repository.PaginacaoRepository;
+import org.vitacare.repository.PaginacaoRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,6 @@ public class PacienteService {
     private final PacienteRepository paciente;
     private final ObjectMapper objectMapper;
     private final PacienteRepository pacienteRepository;
-//    private final PaginacaoRepository paginacaoRepository;
 
     public List<PacienteModel> buscarPaciente(){
         return paciente.findAll();
@@ -135,42 +135,7 @@ public class PacienteService {
         pacienteRepository.save(cadastroConsulta.get());
     }
 
-//    public Page<PaginacaoPacienteRequest> paginacaoPacienteRequests() {
-//
-//    }
-
-
-
 //TODO Realizar a construção do filtro
-//    public Page<PacienteCreateRequest> getFiltro(PacienteFilterRequest filtro, Pageable pageable) {
-//
-//        String nomePaciente = extractNomePaciente(filtro);
-//        String cpf = extractCpfPaciente(filtro);
-//        StatusDoPaciente statusDoPaciente = extractStatusPaciente(filtro);
-//        String search = filtro.getSearch();
-//
-//
-//        String busca = filtro.getSearch();
-//        if (busca != null && !busca.isEmpty()) {
-//            busca = "%" + busca + "%";
-//        }else {
-//            busca = null;
-//        }
-//        Page<PacienteCreateRequest> results = pacienteRepository.
-//
-//    }
-//
-//    private String extractNomePaciente(PacienteFilterRequest filtro) {
-//        return (filtro != null) ? filtro.getNomePaciente() : null;
-//    }
-//
-//    private String extractCpfPaciente(PacienteFilterRequest filtro) {
-//        return (filtro != null) ? filtro.getCpf() : null;
-//    }
-//
-//    private StatusDoPaciente extractStatusPaciente(PacienteFilterRequest filtro) {
-//        return (filtro != null) ? filtro.getStatusDoPaciente() : null;
-//    }
 
 
 

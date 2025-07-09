@@ -1,11 +1,8 @@
-//package org.vitacare.repository;
-//
-//import org.springframework.data.repository.PagingAndSortingRepository;
-//import org.vitacare.dto.PaginacaoPacienteRequest;
-//
-//public interface PaginacaoRepository extends PagingAndSortingRepository<PaginacaoPacienteRequest, Long> {
-//
-//
-//
-//
-//}
+package org.vitacare.repository;
+
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.vitacare.model.PacienteModel;
+
+public interface PaginacaoRepository extends PagingAndSortingRepository<PacienteModel, Long> {
+
+}
