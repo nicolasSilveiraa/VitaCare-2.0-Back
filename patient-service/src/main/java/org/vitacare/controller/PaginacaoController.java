@@ -16,7 +16,7 @@ import java.util.List;
 
 public class PaginacaoController {
     @Autowired
-    PaginacaoService paginacaoService;
+    private PaginacaoService paginacaoService;
 
     @GetMapping
     public List<PacienteModel> paginas(@PageableDefault(page = 0, size = 5, sort = "idPaciente") Pageable pageable) {
