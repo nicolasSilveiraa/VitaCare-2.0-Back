@@ -1,15 +1,13 @@
 package org.vitacare.dto;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.vitacare.model.Enum.ConvenioPaciente;
+import org.vitacare.model.Enum.ConvenioDoPaciente;
 import org.vitacare.model.Enum.StatusDoPaciente;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -26,7 +24,7 @@ public class PacienteCreateRequest {
     private String rgPaciente;
     private String emissorRgPaciente;
     private String endereco;
-    private ConvenioPaciente convenioCliente;
+    private ConvenioDoPaciente convenioCliente;
     private String planoPaciente;
     private LocalDate validadeConvenio;
     private String carteirinhaPaciente;
