@@ -50,10 +50,13 @@ public class PacienteService {
         }
     }
 
-    public void validacaoStatusPaciente(PacienteCreateRequest pacienteCreateRequest) throws Exception {
-        if (pacienteCreateRequest.getStatusPaciente() != null && !pacienteCreateRequest.getStatusPaciente().equals(StatusDoPaciente.CONSULTA_REALIZADA)) {
-            throw new Exception("Paciente não finalizou a consulta"); //TODO fazer a validação ainda, está incorreto a lógica ele vai vir nulo do banco
+    public PacienteModel validacaoStatusPaciente(Long id) throws Exception {
+        Optional<PacienteModel> verificarStatus = pacienteRepository.findById(id);
+        if (verificarStatus.get().getStatusPaciente().equals(StatusDoPaciente.CONSULTA_REALIZADA)) {
+            throw new
         }
+
+
     }
 
     public void adicionarPaciente(PacienteCreateRequest pacienteCreateRequest) throws Exception{
