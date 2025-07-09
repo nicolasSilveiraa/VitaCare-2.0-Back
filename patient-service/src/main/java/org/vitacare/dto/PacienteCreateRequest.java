@@ -28,9 +28,5 @@ public class PacienteCreateRequest {
     private String planoPaciente;
     private LocalDate validadeConvenio;
     private String carteirinhaPaciente;
-    private String alergiasPaciente;
-    private String queixasPaciente;
-    private String diagnosticoPaciente;
-    private String prescricaoPaciente;
     private StatusDoPaciente statusPaciente;
 }

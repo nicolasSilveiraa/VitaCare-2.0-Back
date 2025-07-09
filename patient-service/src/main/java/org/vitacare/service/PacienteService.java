@@ -2,16 +2,10 @@ package org.vitacare.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.vitacare.dto.PacienteCreateRequest;
-import org.vitacare.dto.PacienteFilterRequest;
-import org.vitacare.dto.TriagemRequest;
-import org.vitacare.exception.ConsultaStatusException;
-import org.vitacare.exception.PacienteNaoEncontradoException;
-import org.vitacare.exception.PacienteRegistradoException;
-import org.vitacare.exception.TriagemStatusException;
+import org.vitacare.dto.TriagemPacienteRequest;
+import org.vitacare.exception.*;
 import org.vitacare.model.Enum.StatusDoPaciente;
 import org.vitacare.model.PacienteModel;
 import org.vitacare.repository.PacienteRepository;
@@ -50,18 +44,8 @@ public class PacienteService {
         }
     }
 
-    public PacienteModel validacaoStatusPaciente(Long id) throws Exception {
-        Optional<PacienteModel> verificarStatus = pacienteRepository.findById(id);
-        if (verificarStatus.get().getStatusPaciente().equals(StatusDoPaciente.CONSULTA_REALIZADA)) {
-            throw new
-        }
-
-
-    }
-
     public void adicionarPaciente(PacienteCreateRequest pacienteCreateRequest) throws Exception{
         verificarPacienteCriado(pacienteCreateRequest);
-        validacaoStatusPaciente(pacienteCreateRequest);
         PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
         pacienteModel.setStatusPaciente(StatusDoPaciente.AGUARDANDO_TRIAGEM);
         paciente.save(pacienteModel);
@@ -79,8 +63,9 @@ public class PacienteService {
         paciente.deleteById(id);
     }
 
-    public void realizarTriagem(Long id) throws Exception {
+    public void realizarTriagem(Long id, TriagemPacienteRequest triagemPacienteRequest) throws Exception {
         verificarPacienteExiste(id);
+        cadastramentoTriagem(id, triagemPacienteRequest);
         PacienteModel consultaPaciente = verificarTriagemRealizada(id);
         consultaPaciente.setStatusPaciente(StatusDoPaciente.AGUARDANDO_CONSULTA);
         pacienteRepository.save(consultaPaciente);
@@ -108,6 +93,22 @@ public class PacienteService {
         }
         return consultaPaciente.get();
     }
+
+    public PacienteModel cadastramentoTriagem(Long id, TriagemPacienteRequest triagemPacienteRequest) throws Exception {
+       Optional<PacienteModel> cadastroTriagem = pacienteRepository.findById(id);
+
+       if (cadastroTriagem.isEmpty() || triagemPacienteRequest.getAlergiasPaciente() == null) {
+            throw new AlergiaVazioException();
+        }
+        if (cadastroTriagem.isEmpty() || triagemPacienteRequest.getQueixasPaciente() == null) {
+            throw new QueixasVazioException();
+        }
+
+        cadastroTriagem.get().setAlergiasPaciente(triagemPacienteRequest.getAlergiasPaciente());
+        cadastroTriagem.get().setQueixasPaciente(triagemPacienteRequest.getQueixasPaciente());
+        return pacienteRepository.save(cadastroTriagem.get());
+    }
+
 
 
 //TODO Realizar a construção do filtro
