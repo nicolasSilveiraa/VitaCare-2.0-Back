@@ -88,17 +88,17 @@ public class PacienteService {
     public void realizarConsulta(Long id, ConsultaPacienteRequest consultaPacienteRequest) throws Exception {
         verificarPacienteExiste(id);
         cadastramentoConsulta(id, consultaPacienteRequest);
-        PacienteModel realizandoConsulta = verificarConsultaRealizada(id);
-        realizandoConsulta.setStatusPaciente(StatusDoPaciente.CONSULTA_REALIZADA);
-        pacienteRepository.save(realizandoConsulta);
+        Optional<PacienteModel> pacienteModel = pacienteRepository.findById(id);
+        PacienteModel paciente = pacienteModel.get();
+        verificarConsultaRealizada(paciente);
+        paciente.setStatusPaciente(StatusDoPaciente.CONSULTA_REALIZADA);
+        pacienteRepository.save(paciente);
     }
 
-    public PacienteModel verificarConsultaRealizada(Long id) throws Exception {
-        Optional<PacienteModel> consultaPaciente = pacienteRepository.findById(id);
-        if (consultaPaciente.isEmpty() || !consultaPaciente.get().getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_CONSULTA)) {
+    public void verificarConsultaRealizada(PacienteModel pacienteModel) throws Exception {
+        if (!pacienteModel.getStatusPaciente().equals(StatusDoPaciente.AGUARDANDO_CONSULTA)) {
             throw new ConsultaStatusException();
         }
-        return consultaPaciente.get();
     }
 
     //TODO Consertar os if encadeado
