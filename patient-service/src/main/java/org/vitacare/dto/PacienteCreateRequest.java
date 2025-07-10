@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.vitacare.model.Enum.ConvenioDoPaciente;
+import org.vitacare.model.Enum.EstadoCivilDoPaciente;
+import org.vitacare.model.Enum.SexoDoPaciente;
 import org.vitacare.model.Enum.StatusDoPaciente;
 
 import java.time.LocalDate;
@@ -18,8 +20,8 @@ public class PacienteCreateRequest {
     private String nomePaciente;
     private LocalDate dataNascimento;
     private String naturalidadePaciente;
-    private String sexoPaciente;
-    private String estadoCivilPaciente;
+    private SexoDoPaciente sexoPaciente;
+    private EstadoCivilDoPaciente estadoCivilPaciente;
     private String cpfPaciente;
     private String rgPaciente;
     private String emissorRgPaciente;

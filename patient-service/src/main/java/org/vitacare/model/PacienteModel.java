@@ -3,6 +3,8 @@ package org.vitacare.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.vitacare.model.Enum.ConvenioDoPaciente;
+import org.vitacare.model.Enum.EstadoCivilDoPaciente;
+import org.vitacare.model.Enum.SexoDoPaciente;
 import org.vitacare.model.Enum.StatusDoPaciente;
 
 import java.time.LocalDate;
@@ -31,10 +33,10 @@ public class PacienteModel {
     private String naturalidadePaciente;
 
     @Column(name = "sexo")
-    private String sexoPaciente;
+    private SexoDoPaciente sexoPaciente;
 
     @Column(name = "estado_civil")
-    private String estadoCivilPaciente;
+    private EstadoCivilDoPaciente estadoCivilPaciente;
 
     @Column(name = "cpf")
     private String cpfPaciente;
