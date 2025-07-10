@@ -7,9 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.vitacare.authservice.dto.AuthRequest;
-import org.vitacare.authservice.dto.AuthResponse;
-import org.vitacare.authservice.dto.RegisterRequest;
+import org.vitacare.authservice.dto.*;
 import org.vitacare.authservice.service.AuthService;
 
 @RestController
@@ -31,9 +29,26 @@ public class AuthController {
         return ResponseEntity.ok(authResponse);
     }
 
-    @GetMapping("/test-secure")
-    public ResponseEntity<String> secureEndpointTest() {
-        String userEmail = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        return ResponseEntity.ok("Olá, " + userEmail + "! Você acessou um endpoint seguro.");
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(authService.refreshToken(request));
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    public void logout(@Valid @RequestBody RefreshTokenRequest request) {
+        authService.logout(request);
+    }
+
+    @PostMapping("/forgot-password")
+    @ResponseStatus(HttpStatus.OK)
+    public void forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        authService.forgotPassword(request);
+    }
+
+    @PostMapping("/reset-password")
+    @ResponseStatus(HttpStatus.OK)
+    public void resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request);
     }
 }
