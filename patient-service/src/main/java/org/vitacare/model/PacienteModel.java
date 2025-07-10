@@ -33,9 +33,11 @@ public class PacienteModel {
     private String naturalidadePaciente;
 
     @Column(name = "sexo")
+    @Enumerated(EnumType.STRING)
     private SexoDoPaciente sexoPaciente;
 
     @Column(name = "estado_civil")
+    @Enumerated(EnumType.STRING)
     private EstadoCivilDoPaciente estadoCivilPaciente;
 
     @Column(name = "cpf")
