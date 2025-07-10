@@ -1,12 +1,17 @@
 package org.vitacare.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import org.vitacare.dto.ConsultaPacienteRequest;
-import org.vitacare.dto.PacienteCreateRequest;
-import org.vitacare.dto.TriagemPacienteRequest;
+import org.vitacare.dto.*;
+import org.vitacare.model.Enum.StatusDoPaciente;
 import org.vitacare.model.PacienteModel;
 import org.vitacare.service.PacienteService;
+
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -26,6 +31,19 @@ public class PacienteController {
     public PacienteModel buscarPacientePorId(@PathVariable Long id) throws Exception{
        return pacienteService.buscarPacientePorId(id);
     }
+
+    @GetMapping("/filtro")
+    public Page<FIltroPacienteResponse> filtrar (
+            @RequestParam(required = false) Long idPaciente,
+            @RequestParam(required = false) String nomePaciente,
+            @RequestParam(required = false) LocalDate dataNascimento,
+            @RequestParam(required = false) String cpfPaciente,
+            @RequestParam(required = false)StatusDoPaciente statusDoPaciente,
+            @PageableDefault(size = 10, sort = "idPaciente", direction = Sort.Direction.ASC) Pageable pageable
+            ) {
+        return pacienteService.filtrarPaciente(idPaciente, nomePaciente, dataNascimento, cpfPaciente, statusDoPaciente, pageable);
+    }
+
 
     @PostMapping
     public void adicionarPaciente(@RequestBody PacienteCreateRequest pacienteCreateRequest) throws Exception{

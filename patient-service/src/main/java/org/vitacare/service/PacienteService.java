@@ -1,21 +1,19 @@
 package org.vitacare.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.jshell.Diag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.vitacare.dto.ConsultaPacienteRequest;
-import org.vitacare.dto.PacienteCreateRequest;
-import org.vitacare.dto.PaginacaoPacienteRequest;
-import org.vitacare.dto.TriagemPacienteRequest;
+import org.vitacare.dto.*;
 import org.vitacare.exception.*;
 import org.vitacare.model.Enum.StatusDoPaciente;
 import org.vitacare.model.PacienteModel;
 import org.vitacare.repository.PacienteRepository;
-import org.vitacare.repository.PaginacaoRepository;
+import org.vitacare.specification.PacienteSpecification;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -134,6 +132,23 @@ public class PacienteService {
         cadastroConsulta.get().setPrescricaoPaciente(consultaPacienteRequest.getPrescricaoPaciente());
         pacienteRepository.save(cadastroConsulta.get());
     }
+
+    public Page<FIltroPacienteResponse> filtrarPaciente(Long idPaciente, String nomePaciente,
+                                                        LocalDate dataNascimento, String cpfPaciente,
+                                                        StatusDoPaciente statusDoPaciente, Pageable pageable) {
+
+        Specification<PacienteModel> specification = PacienteSpecification.filtro(idPaciente, nomePaciente, dataNascimento, cpfPaciente, statusDoPaciente);
+        Page<PacienteModel> pacienteModelPage = pacienteRepository.findAll(specification, pageable);
+
+        return pacienteModelPage.map(pacienteModel -> new FIltroPacienteResponse(
+                pacienteModel.getIdPaciente(),
+                pacienteModel.getNomePaciente(),
+                pacienteModel.getDataNascimento(),
+                pacienteModel.getCpfPaciente(),
+                pacienteModel.getStatusPaciente()
+        ));
+    }
+
 
 //TODO Realizar a construção do filtro
 

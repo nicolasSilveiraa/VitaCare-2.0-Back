@@ -10,14 +10,13 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class PaginacaoPacienteRequest {
+@NoArgsConstructor
+public class FIltroPacienteResponse {
 
-    private String nome;
+    private Long idPaciente;
+    private String nomePaciente;
     private LocalDate dataNascimento;
-    private String cpf;
+    private String cpfPaciente;
     private StatusDoPaciente statusDoPaciente;
-
-
 }
