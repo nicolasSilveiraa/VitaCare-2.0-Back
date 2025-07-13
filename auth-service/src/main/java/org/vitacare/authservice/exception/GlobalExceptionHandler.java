@@ -1,5 +1,6 @@
 package org.vitacare.authservice.exception;
 
+import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -85,7 +86,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMailException(MailException ex, WebRequest request) {
         logger.error("Falha ao enviar email. Causa: {}", ex.getMostSpecificCause().getMessage());
 
-        // Usa o construtor correto do ErrorResponse
         var errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -94,6 +94,26 @@ public class GlobalExceptionHandler {
                 request.getDescription(false).replace("uri=", "")
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorResponse> handleJwtException(JwtException ex, WebRequest request) {
+        logger.warn("Erro de validação do JWT: {}", ex.getMessage());
+
+        String errorMessage = "Token JWT inválido ou expirado.";
+
+        if (ex instanceof io.jsonwebtoken.ExpiredJwtException) {
+            errorMessage = "Sua sessão expirou. Por favor, autentique-se novamente ou atualize seu token.";
+        }
+
+        var errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                "Invalid Token",
+                errorMessage,
+                request.getDescription(false).replace("uri=", "")
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
 }

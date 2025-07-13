@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.vitacare.patientservice.dto.ConsultaPacienteRequest;
 import org.vitacare.patientservice.dto.FIltroPacienteResponse;
@@ -26,6 +27,7 @@ public class PacienteController {
     private final PacienteService pacienteService;
 
     @GetMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public List<PacienteModel> getPaciente(){
         return pacienteService.buscarPaciente();
     }

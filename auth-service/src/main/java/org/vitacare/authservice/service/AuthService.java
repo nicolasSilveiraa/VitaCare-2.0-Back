@@ -155,7 +155,7 @@ public class AuthService {
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
             String token = UUID.randomUUID().toString();
             user.setPasswordResetToken(token);
-            user.setPasswordResetTokenExpiry(LocalDateTime.now().plusHours(1));
+            user.setPasswordResetTokenExpiry(LocalDateTime.now().plusHours(10));
             userRepository.save(user);
 
             String resetUrl = "http://localhost:4200/reset-password?token=" + token;
