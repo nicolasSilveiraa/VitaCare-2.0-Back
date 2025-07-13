@@ -1,5 +1,7 @@
 package org.vitacare.authservice.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -63,14 +67,26 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return username -> userRepository.findByEmail(username)
-                .map(user -> new User(
-                        user.getEmail(),
-                        user.getPassword(),
-                        user.getRoles().stream()
-                                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                                .collect(Collectors.toList())
-                ))
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado"));
+        return username -> {
+            logger.info("Buscando usuário pelo email: {}", username);
+
+            return userRepository.findByEmail(username)
+                    .map(user -> {
+
+                        logger.info("Usuario {} encontrado. Roles: {}", username, user.getRoles());
+
+                        return new User(
+                                user.getEmail(),
+                                user.getPassword(),
+                                user.getRoles().stream()
+                                        .map(role -> new SimpleGrantedAuthority(role.getName()))
+                                        .collect(Collectors.toList())
+                        );
+                    }).orElseThrow(() -> {
+
+                        logger.info("Usuario nao encontrado com o email: {}", username);
+                        return new UsernameNotFoundException("Usuario nao encontrado");
+                    });
+        };
     }
 }
