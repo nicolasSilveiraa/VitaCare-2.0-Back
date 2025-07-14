@@ -24,12 +24,12 @@ public class SecurityConfigPatient {
                 .csrf(csrf -> csrf.disable())
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/actuator/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/patients/**").authenticated()
                         .anyRequest().denyAll()
-                )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                );
 
         return http.build();
     }

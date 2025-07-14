@@ -46,7 +46,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             final String userEmail = jwtService.extractUsername(jwt);
 
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                if (jwtService.isTokenValid(jwt)) { // Valida apenas o token, não o usuário
+                if (jwtService.isTokenValid(jwt)) {
 
                     Claims claims = jwtService.extractAllClaims(jwt);
                     @SuppressWarnings("unchecked")
