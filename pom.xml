@@ -22,6 +22,7 @@
         <module>api-gateway</module>
         <module>config-server</module>
         <module>patient-service</module>
+        <module>cadastro-paciente</module>
     </modules>
 
     <properties>
