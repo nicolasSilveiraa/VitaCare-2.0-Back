@@ -23,6 +23,7 @@
         <module>config-server</module>
         <module>patient-service</module>
         <module>cadastro-paciente</module>
+        <module>convenio-paciente</module>
     </modules>
 
     <properties>
