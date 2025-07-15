@@ -39,7 +39,7 @@ public class PacienteModel {
     private Boolean convenio;
 
     @Column(name = "plano_id")
-    private String nomePlano;
+    private Long nomePlano;
 
     @Column(name = "cpf")
     private String cpf;
