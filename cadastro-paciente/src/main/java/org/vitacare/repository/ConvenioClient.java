@@ -5,7 +5,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import org.vitacare.dto.request.PlanosRequest;
 import org.vitacare.dto.response.PlanosResponse;
-import org.vitacare.model.Planos;
 
 import java.util.List;
 

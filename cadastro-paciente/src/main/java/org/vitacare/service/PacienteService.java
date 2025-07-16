@@ -46,22 +46,33 @@ public class PacienteService {
 
     public void cadastrarPaciente(PacienteCreateRequest pacienteCreateRequest) throws Exception{
         verificarPacienteCriado(pacienteCreateRequest);
-        PlanosResponse planos = convenioClient.buscarPlanoPorId(pacienteCreateRequest.getIdPlano());
         PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
-        pacienteModel.setIdPlano(planos.getId());
+        if (pacienteCreateRequest.getConvenio() && pacienteCreateRequest.getIdPlano() != null) {
+            PlanosResponse planos = convenioClient.buscarPlanoPorId(pacienteCreateRequest.getIdPlano());
+            pacienteModel.setIdPlano(planos.getId());
+        }else {
+            pacienteModel.setIdPlano(null);
+        }
         paciente.save(pacienteModel);
     }
 
     public void alterarPaciente(PacienteCreateRequest pacienteCreateRequest, Long id) throws Exception {
         verificarPacienteExiste(id);
         PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
-        pacienteModel.setIdPaciente(id);
+        PlanosResponse planosResponse = convenioClient.buscarPlanoPorId(pacienteCreateRequest.getIdPlano());
+        pacienteModel.setIdPaciente(planosResponse.getId());
         paciente.save(pacienteModel);
     }
 
     public void excluirPaciente(Long id) throws Exception {
         verificarPacienteExiste(id);
         paciente.deleteById(id);
+    }
+
+    public void alterarPlanoDoPaciente(PacienteCreateRequest pacienteCreateRequest, Long id) throws Exception {
+        verificarPacienteExiste(id);
+
+
     }
 
 
