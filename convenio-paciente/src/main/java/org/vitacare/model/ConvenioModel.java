@@ -1,5 +1,7 @@
 package org.vitacare.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +31,7 @@ public class ConvenioModel {
     private String cnpjConvenio;
 
     @OneToMany(mappedBy = "convenioModel")
+    @JsonIgnore
     private List<Planos> planos;
 
 }

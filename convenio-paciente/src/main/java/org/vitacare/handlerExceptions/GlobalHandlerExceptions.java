@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.vitacare.dto.response.ErrorResponse;
 import org.vitacare.exceptions.convenioExceptions.ConvenioCadastradoExceptions;
 import org.vitacare.exceptions.convenioExceptions.ConvenioNaoExisteException;
+import org.vitacare.exceptions.planosExceptions.PlanoNaoExisteExceptions;
 
 @RestControllerAdvice
 public class GlobalHandlerExceptions {
@@ -21,6 +22,12 @@ public class GlobalHandlerExceptions {
     public ResponseEntity<ErrorResponse> convenioJaCadastrado(ConvenioCadastradoExceptions convenioCadastradoExceptions) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT.value(), convenioCadastradoExceptions.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(PlanoNaoExisteExceptions.class)
+    public ResponseEntity<ErrorResponse> planoNaoExiste(PlanoNaoExisteExceptions planoNaoExisteExceptions) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), planoNaoExisteExceptions.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
 }

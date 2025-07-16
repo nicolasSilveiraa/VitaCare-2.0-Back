@@ -1,5 +1,7 @@
 package org.vitacare.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,11 +26,12 @@ public class Planos {
     @Column(name = "nome")
     private String nome;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_convenio")
     private ConvenioModel convenioModel;
 
     @OneToMany(mappedBy = "planos")
+    @JsonIgnore
     private List<EspecialidadeDoPlanoModel> especialidadeDoPlanos;
 
 }

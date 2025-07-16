@@ -7,5 +7,4 @@ import org.vitacare.model.Planos;
 @Repository
 public interface PlanoRepository extends JpaRepository<Planos, Long> {
 
-
 }

@@ -19,7 +19,7 @@ public class EspecialidadeDoPlanoModel {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_plano")
     private Planos planos;
 
