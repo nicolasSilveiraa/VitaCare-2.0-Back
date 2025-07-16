@@ -23,6 +23,7 @@
         <module>config-server</module>
         <module>auth-service</module>
         <module>patient-service</module>
+        <module>agenda-service</module>
     </modules>
 
     <properties>
