@@ -22,11 +22,12 @@
         <module>api-gateway</module>
         <module>config-server</module>
         <module>auth-service</module>
-<!--        <module>patient-service</module>-->
         <module>agendamento-service</module>
         <module>paciente-comando-service</module>
         <module>convenio-service</module>
         <module>common-dtos</module>
+        <module>patient-service</module>
+        <module>professional-service</module>
     </modules>
 
     <properties>
