@@ -1,0 +1,44 @@
+package org.vitacare.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import org.vitacare.dto.request.ConvenioRequest;
+import org.vitacare.model.ConvenioModel;
+import org.vitacare.service.ConvenioService;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/convenio")
+public class ConvenioController {
+
+    private final ConvenioService convenioService;
+
+
+    @GetMapping
+    public List<ConvenioModel> getConvenio() {
+        return convenioService.listaConvenio();
+    }
+
+    @GetMapping("{id}")
+    public ConvenioModel getConvenioPorId(@PathVariable Long id) throws Exception {
+        return convenioService.buscarConvenioPorId(id);
+    }
+
+    @PostMapping
+    public void cadastrarConvenio(@RequestBody ConvenioRequest convenioRequest) throws Exception {
+        convenioService.cadastrarConvenio(convenioRequest);
+    }
+
+    @PutMapping("{id}")
+    public void atualizarConvenio(@RequestBody ConvenioRequest convenioRequest, @PathVariable Long id) throws Exception {
+        convenioService.atualizarConvenio(id, convenioRequest);
+    }
+
+    @DeleteMapping("{id}")
+    public void deletarConvenio(@PathVariable Long id) throws Exception {
+        convenioService.deletarConvenio(id);
+    }
+
+}

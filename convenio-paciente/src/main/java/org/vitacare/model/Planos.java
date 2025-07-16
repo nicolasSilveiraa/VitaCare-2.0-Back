@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,8 +29,6 @@ public class Planos {
     private ConvenioModel convenioModel;
 
     @OneToMany(mappedBy = "planos")
-    private List<EspecialidadeDoPlano> especialidadeDoPlanos;
-
-
+    private List<EspecialidadeDoPlanoModel> especialidadeDoPlanos;
 
 }

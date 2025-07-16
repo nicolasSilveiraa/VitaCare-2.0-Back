@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "planos_cobertura_especialidade")
-public class EspecialidadeDoPlano {
+public class EspecialidadeDoPlanoModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
