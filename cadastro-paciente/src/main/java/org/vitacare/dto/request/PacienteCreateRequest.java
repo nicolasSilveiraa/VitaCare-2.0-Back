@@ -19,7 +19,7 @@ public class PacienteCreateRequest {
     private SexoPaciente sexoPaciente;
     private String endereco;
     private Boolean convenio;
-    private Long nomePlano;
+    private Long idPlano;
     private String cpf;
 
 }

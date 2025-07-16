@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,10 +28,7 @@ public class ConvenioModel {
     @Column(name = "cnpj")
     private String cnpjConvenio;
 
-    @Column(name = "ativo")
-    private Boolean statusConvenio;
-
     @OneToMany(mappedBy = "convenioModel")
-    private List<Planos> planosList;
+    private List<Planos> planos;
 
 }

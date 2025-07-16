@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,25 +25,12 @@ public class Planos {
     @Column(name = "nome")
     private String nome;
 
-    @Column(name = "tipo")
-    private String tipoPlano;
-
-    @Column(name = "ativo")
-    private Boolean status;
-
-    @ManyToOne
-    @JoinColumn(name = "convenio_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_convenio")
     private ConvenioModel convenioModel;
 
-    @OneToMany(mappedBy = "planosEspecialidade")
-    private List<EspecialidadeDoPlano> especialidadeDoPlanoList;
-
     @OneToMany(mappedBy = "planos")
-    private List<PacientesConvenio> pacientesConvenios;
-
-
-
-
+    private List<EspecialidadeDoPlano> especialidadeDoPlanos;
 
 
 

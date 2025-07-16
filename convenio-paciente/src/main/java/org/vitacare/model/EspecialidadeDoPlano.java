@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "planos_cobertura_especialidades")
+@Table(name = "planos_cobertura_especialidade")
 public class EspecialidadeDoPlano {
 
     @Id
@@ -19,13 +19,12 @@ public class EspecialidadeDoPlano {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "especialidade")
-    private String especialidade;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_plano")
+    private Planos planos;
 
-    @ManyToOne
-    @JoinColumn(name = "plano_id")
-    private Planos planosEspecialidade;
-
+    @Column(name = "id_especialidade")
+    private Long idEspecialidade;
 
 
 }
