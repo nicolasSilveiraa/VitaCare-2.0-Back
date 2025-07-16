@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.vitacare.dto.request.PacienteCreateRequest;
+import org.vitacare.dto.response.PlanosResponse;
 import org.vitacare.exception.PacienteCadastradoException;
 import org.vitacare.exception.PacienteExisteException;
 import org.vitacare.model.PacienteModel;
+import org.vitacare.model.Planos;
+import org.vitacare.repository.ConvenioClient;
 import org.vitacare.repository.PacienteRepository;
 
 import java.util.List;
@@ -17,7 +20,7 @@ public class PacienteService {
 
     private final PacienteRepository paciente;
     private final ObjectMapper objectMapper;
-    private final PacienteRepository pacienteRepository;
+    private final ConvenioClient convenioClient;
 
     public List<PacienteModel> buscarPaciente() {
         return paciente.findAll();
@@ -43,7 +46,9 @@ public class PacienteService {
 
     public void cadastrarPaciente(PacienteCreateRequest pacienteCreateRequest) throws Exception{
         verificarPacienteCriado(pacienteCreateRequest);
+        PlanosResponse planos = convenioClient.buscarPlanoPorId(pacienteCreateRequest.getIdPlano());
         PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
+        pacienteModel.setIdPlano(planos.getId());
         paciente.save(pacienteModel);
     }
 

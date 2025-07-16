@@ -7,10 +7,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class PacienteResponse {
+@NoArgsConstructor
+public class PlanosResponse {
 
-    private Long idPaciente;
+    private Long id;
+    private String nome;
+    private Long idConvenio;
 
 }
