@@ -21,6 +21,9 @@
         <module>service-registry</module>
         <module>api-gateway</module>
         <module>config-server</module>
+        <module>auth-service</module>
+        <module>patient-service</module>
+        <module>agenda-service</module>
         <module>patient-service</module>
         <module>cadastro-paciente</module>
         <module>convenio-paciente</module>
