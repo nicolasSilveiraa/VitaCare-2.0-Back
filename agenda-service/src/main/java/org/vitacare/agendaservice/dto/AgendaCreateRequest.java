@@ -1,4 +1,4 @@
-package org.vitacare.dto;
+package org.vitacare.agendaservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,5 +20,6 @@ public class AgendaCreateRequest {
     private String especialidade;
     private String medico;
     private String namePaciente;
+    private LocalTime criadoEm;
 
 }

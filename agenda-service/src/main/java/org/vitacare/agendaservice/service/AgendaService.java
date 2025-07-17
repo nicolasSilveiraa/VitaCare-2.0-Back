@@ -1,11 +1,11 @@
-package org.vitacare.service;
+package org.vitacare.agendaservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.vitacare.dto.AgendaCreateRequest;
-import org.vitacare.model.AgendaModel;
-import org.vitacare.repository.AgendaRepository;
+import org.vitacare.agendaservice.dto.AgendaCreateRequest;
+import org.vitacare.agendaservice.model.AgendaModel;
+import org.vitacare.agendaservice.repository.AgendaRepository;
 
 import java.util.List;
 
@@ -34,6 +34,15 @@ public class AgendaService {
     }
 
     public void adicionarAgenda(AgendaCreateRequest agendaCreateRequest) throws Exception {
+        // Verifica se já existe agendamento para o mesmo médico, data e hora
+        boolean existe = agendaRepository.existsByMedicoAndDataConsultaAndHoraConsulta(
+                agendaCreateRequest.getMedico(),
+                agendaCreateRequest.getDataConsulta(),
+                agendaCreateRequest.getHoraConsulta()
+        );
+        if (existe) {
+            throw new Exception("Já existe um agendamento para este médico neste horário.");
+        }
         AgendaModel agendaModel = objectMapper.convertValue(agendaCreateRequest, AgendaModel.class);
         agendaRepository.save(agendaModel);
     }

@@ -1,4 +1,4 @@
-package org.vitacare.model;
+package org.vitacare.agendaservice.model;
 
 
 import jakarta.persistence.*;
@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -42,8 +44,15 @@ public class AgendaModel {
     @Column(name = "name_paciente")
     private String namePaciente;
 
-    @Column(name = "criado_em")
-    private LocalTime criadoEm;
+    @CreationTimestamp
+    @Column(name = "criado_em", nullable = false, updatable = false)
+    @PrePersist
+    public void prePersist() {
+        if (criadoEm == null) {
+            this.criadoEm = LocalDateTime.now().withSecond(0).withNano(0);
+        }
+    }
+    private LocalDateTime criadoEm;
 
 
 }
