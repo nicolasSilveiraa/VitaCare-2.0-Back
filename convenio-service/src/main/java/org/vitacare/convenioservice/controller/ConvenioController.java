@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/convenio")
+@RequestMapping("api/v1/convenios")
 public class ConvenioController {
 
     private final ConvenioService convenioService;

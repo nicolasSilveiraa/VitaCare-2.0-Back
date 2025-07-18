@@ -9,7 +9,7 @@ import org.vitacare.convenioservice.service.PlanoService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/planos")
+@RequestMapping("api/v1/planos")
 @RequiredArgsConstructor
 public class PlanoController {
 
