@@ -1,7 +1,8 @@
 package org.vitacare.dtos.healthplan;
 
-public record PlanosResponse (
+public record PlanoResponse(
         Long id,
         String nome,
-        Long idConvenio
-){}
+        String tipo
+
+) { }

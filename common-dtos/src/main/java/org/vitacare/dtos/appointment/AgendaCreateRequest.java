@@ -1,25 +1,14 @@
-package org.vitacare.agendaservice.dto;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package org.vitacare.dtos.appointment;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class AgendaCreateRequest {
-
-    private Long pacienteId;
-    private LocalDate dataConsulta;
-    private LocalTime horaConsulta;
-    private String especialidade;
-    private String medico;
-    private String namePaciente;
-    private LocalTime criadoEm;
-
-}
+public record AgendaCreateRequest(
+    Long pacienteId,
+    LocalDate dataConsulta,
+    LocalTime horaConsulta,
+    String especialidade,
+    String medico,
+    String namePaciente,
+    LocalTime criadoEm
+){ }

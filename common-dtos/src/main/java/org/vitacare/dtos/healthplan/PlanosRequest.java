@@ -1,20 +1,9 @@
-package org.vitacare.convenioservice.dto.request;
-
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package org.vitacare.dtos.healthplan;
 
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class PlanosRequest {
-
-    private String nome;
-    private Long idConvenio;
-    private List<Long> especialidadeDoPlano;
-}
+public record PlanosRequest(
+        String nome,
+        Long idConvenio,
+        List<Long> especialidadeDoPlano
+) { }

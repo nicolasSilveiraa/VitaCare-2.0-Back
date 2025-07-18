@@ -1,7 +1,6 @@
-// src/main/java/org/vitacare/model/Enum/SexoDoPaciente.java
-package org.vitacare.patientservice.model.Enum;
+package org.vitacare.dtos.patient;
 
-public enum SexoDoPaciente {
+public enum SexoPaciente {
     MASCULINO,
     FEMININO,
     OUTRO;

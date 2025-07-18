@@ -1,16 +1,7 @@
-package org.vitacare.convenioservice.dto;
+package org.vitacare.dtos.patient;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+public record TriagemPacienteRequest(
+        String alergiasPaciente,
+        String queixasPaciente
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class TriagemPacienteRequest {
-
-    private String alergiasPaciente;
-    private String queixasPaciente;
-}
+) { }
