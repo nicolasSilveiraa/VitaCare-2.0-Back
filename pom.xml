@@ -22,17 +22,18 @@
         <module>api-gateway</module>
         <module>config-server</module>
         <module>auth-service</module>
-        <module>patient-service</module>
+<!--        <module>patient-service</module>-->
         <module>agenda-service</module>
-        <module>patient-service</module>
         <module>cadastro-paciente</module>
         <module>convenio-paciente</module>
+        <module>common-dtos</module>
     </modules>
 
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jjwt.version>0.12.6</jjwt.version>
     </properties>
 
     <dependencyManagement>
@@ -43,6 +44,11 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.vitacare</groupId>
+                <artifactId>common-dtos</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -1,4 +1,4 @@
-package org.vitacare.dto.response;
+package org.vitacare.convenioservice.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,11 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponse {
+@NoArgsConstructor
+public class EspecialidadesRequest {
 
-    private int status;
-    private String mensagem;
-
+    private Long especialidadeId;
 }

@@ -1,11 +1,11 @@
-package org.vitacare.dto;
+package org.vitacare.convenioservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.vitacare.model.Enum.ConvenioDoPaciente;
-import org.vitacare.model.Enum.StatusDoPaciente;
+import org.vitacare.convenioservice.model.Enum.ConvenioDoPaciente;
+import org.vitacare.convenioservice.model.Enum.StatusDoPaciente;
 
 import java.time.LocalDate;
 

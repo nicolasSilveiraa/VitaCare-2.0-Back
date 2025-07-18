@@ -1,4 +1,4 @@
-package org.vitacare.dto.request;
+package org.vitacare.convenioservice.dto.request;
 
 
 import lombok.AllArgsConstructor;
