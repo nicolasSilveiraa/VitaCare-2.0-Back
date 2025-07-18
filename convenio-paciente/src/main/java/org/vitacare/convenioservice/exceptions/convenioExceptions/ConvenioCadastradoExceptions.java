@@ -1,4 +1,4 @@
-package org.vitacare.exceptions.convenioExceptions;
+package org.vitacare.convenioservice.exceptions.convenioExceptions;
 
 public class ConvenioCadastradoExceptions extends Exception{
 

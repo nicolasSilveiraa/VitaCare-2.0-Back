@@ -1,13 +1,13 @@
-package org.vitacare.service;
+package org.vitacare.convenioservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.vitacare.dto.request.ConvenioRequest;
-import org.vitacare.exceptions.convenioExceptions.ConvenioCadastradoExceptions;
-import org.vitacare.exceptions.convenioExceptions.ConvenioNaoExisteException;
-import org.vitacare.model.ConvenioModel;
-import org.vitacare.repository.ConvenioRepository;
+import org.vitacare.dtos.healthplan.ConvenioRequest;
+import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioCadastradoExceptions;
+import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioNaoExisteException;
+import org.vitacare.convenioservice.model.ConvenioModel;
+import org.vitacare.convenioservice.repository.ConvenioRepository;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class ConvenioService {
     }
 
     public void verificarConvenioCadastrado(ConvenioRequest convenioRequest) throws Exception{
-        Boolean byCnpj = convenio.existsByCnpjConvenio(convenioRequest.getCnpjConvenio());
+        Boolean byCnpj = convenio.existsByCnpjConvenio(convenioRequest.cnpjConvenio());
         if (byCnpj) {
             throw new ConvenioCadastradoExceptions();
         }

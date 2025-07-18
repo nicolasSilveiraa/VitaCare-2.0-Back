@@ -1,4 +1,4 @@
-package org.vitacare.exceptions.planosExceptions;
+package org.vitacare.convenioservice.exceptions.planosExceptions;
 
 public class PlanoNaoExisteExceptions extends Exception{
 

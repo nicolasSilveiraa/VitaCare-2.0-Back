@@ -1,6 +1,5 @@
-package org.vitacare.model;
+package org.vitacare.convenioservice.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

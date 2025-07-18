@@ -1,4 +1,4 @@
-package org.vitacare.model;
+package org.vitacare.convenioservice.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

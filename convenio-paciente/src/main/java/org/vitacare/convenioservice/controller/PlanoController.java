@@ -1,10 +1,10 @@
-package org.vitacare.controller;
+package org.vitacare.convenioservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.vitacare.dto.request.PlanosRequest;
-import org.vitacare.model.Planos;
-import org.vitacare.service.PlanoService;
+import org.vitacare.dtos.healthplan.PlanosRequest;
+import org.vitacare.convenioservice.model.Planos;
+import org.vitacare.convenioservice.service.PlanoService;
 
 import java.util.List;
 

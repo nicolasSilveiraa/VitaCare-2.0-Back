@@ -1,13 +1,13 @@
-package org.vitacare.handlerExceptions;
+package org.vitacare.convenioservice.handlerExceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.vitacare.dto.response.ErrorResponse;
-import org.vitacare.exceptions.convenioExceptions.ConvenioCadastradoExceptions;
-import org.vitacare.exceptions.convenioExceptions.ConvenioNaoExisteException;
-import org.vitacare.exceptions.planosExceptions.PlanoNaoExisteExceptions;
+import org.vitacare.dtos.common.ErrorResponse;
+import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioCadastradoExceptions;
+import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioNaoExisteException;
+import org.vitacare.convenioservice.exceptions.planosExceptions.PlanoNaoExisteExceptions;
 
 @RestControllerAdvice
 public class GlobalHandlerExceptions {
