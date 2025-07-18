@@ -1,4 +1,4 @@
-package org.vitacare.exception;
+package org.vitacare.cadastroservice.exception;
 
 public class PacienteExisteException extends Exception{
 

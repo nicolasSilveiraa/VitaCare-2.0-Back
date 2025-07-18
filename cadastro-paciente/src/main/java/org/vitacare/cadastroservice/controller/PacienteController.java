@@ -1,10 +1,10 @@
-package org.vitacare.controller;
+package org.vitacare.cadastroservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.vitacare.dto.request.PacienteCreateRequest;
-import org.vitacare.model.PacienteModel;
-import org.vitacare.service.PacienteService;
+import org.vitacare.dtos.patient.PacienteCreateRequest;
+import org.vitacare.cadastroservice.model.PacienteModel;
+import org.vitacare.cadastroservice.service.PacienteService;
 
 import java.util.List;
 

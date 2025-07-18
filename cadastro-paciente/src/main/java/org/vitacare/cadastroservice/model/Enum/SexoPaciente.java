@@ -1,4 +1,4 @@
-package org.vitacare.model.Enum;
+package org.vitacare.cadastroservice.model.Enum;
 
 public enum SexoPaciente {
 

@@ -1,16 +1,15 @@
-package org.vitacare.service;
+package org.vitacare.cadastroservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.vitacare.dto.request.PacienteCreateRequest;
-import org.vitacare.dto.response.PlanosResponse;
-import org.vitacare.exception.PacienteCadastradoException;
-import org.vitacare.exception.PacienteExisteException;
-import org.vitacare.model.PacienteModel;
-import org.vitacare.model.Planos;
-import org.vitacare.repository.ConvenioClient;
-import org.vitacare.repository.PacienteRepository;
+import org.vitacare.dtos.patient.PacienteCreateRequest;
+import org.vitacare.dtos.healthplan.PlanosResponse;
+import org.vitacare.cadastroservice.exception.PacienteCadastradoException;
+import org.vitacare.cadastroservice.exception.PacienteExisteException;
+import org.vitacare.cadastroservice.model.PacienteModel;
+import org.vitacare.cadastroservice.repository.ConvenioClient;
+import org.vitacare.cadastroservice.repository.PacienteRepository;
 
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class PacienteService {
     }
 
     public void verificarPacienteCriado(PacienteCreateRequest pacienteCreateRequest) throws Exception {
-        Boolean byCpf = paciente.existsByCpf(pacienteCreateRequest.getCpf());
+        Boolean byCpf = paciente.existsByCpf(pacienteCreateRequest.cpf());
         if(byCpf) {
             throw new PacienteCadastradoException();
         }
@@ -47,9 +46,9 @@ public class PacienteService {
     public void cadastrarPaciente(PacienteCreateRequest pacienteCreateRequest) throws Exception{
         verificarPacienteCriado(pacienteCreateRequest);
         PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
-        if (pacienteCreateRequest.getConvenio() && pacienteCreateRequest.getIdPlano() != null) {
-            PlanosResponse planos = convenioClient.buscarPlanoPorId(pacienteCreateRequest.getIdPlano());
-            pacienteModel.setIdPlano(planos.getId());
+        if (pacienteCreateRequest.convenio() && pacienteCreateRequest.idPlano() != null) {
+            PlanosResponse planos = convenioClient.buscarPlanoPorId(pacienteCreateRequest.idPlano());
+            pacienteModel.setIdPlano(planos.id());
         }else {
             pacienteModel.setIdPlano(null);
         }
@@ -59,8 +58,8 @@ public class PacienteService {
     public void alterarPaciente(PacienteCreateRequest pacienteCreateRequest, Long id) throws Exception {
         verificarPacienteExiste(id);
         PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
-        PlanosResponse planosResponse = convenioClient.buscarPlanoPorId(pacienteCreateRequest.getIdPlano());
-        pacienteModel.setIdPaciente(planosResponse.getId());
+        PlanosResponse planosResponse = convenioClient.buscarPlanoPorId(pacienteCreateRequest.idPlano());
+        pacienteModel.setIdPaciente(planosResponse.id());
         paciente.save(pacienteModel);
     }
 

@@ -1,11 +1,11 @@
-package org.vitacare.model;
+package org.vitacare.cadastroservice.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.vitacare.model.Enum.SexoPaciente;
+import org.vitacare.cadastroservice.model.Enum.SexoPaciente;
 
 import java.time.LocalDate;
 

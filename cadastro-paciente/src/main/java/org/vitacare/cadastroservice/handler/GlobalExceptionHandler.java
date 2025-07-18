@@ -1,12 +1,12 @@
-package org.vitacare.handler;
+package org.vitacare.cadastroservice.handler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.vitacare.dto.response.ErrorResponse;
-import org.vitacare.exception.PacienteCadastradoException;
-import org.vitacare.exception.PacienteExisteException;
+import org.vitacare.dtos.common.ErrorResponse;
+import org.vitacare.cadastroservice.exception.PacienteCadastradoException;
+import org.vitacare.cadastroservice.exception.PacienteExisteException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

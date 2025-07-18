@@ -1,10 +1,10 @@
-package org.vitacare.repository;
+package org.vitacare.cadastroservice.repository;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
-import org.vitacare.dto.request.PlanosRequest;
-import org.vitacare.dto.response.PlanosResponse;
+import org.vitacare.dtos.healthplan.PlanosRequest;
+import org.vitacare.dtos.healthplan.PlanosResponse;
 
 import java.util.List;
 

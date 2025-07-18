@@ -1,4 +1,4 @@
-package org.vitacare;
+package org.vitacare.cadastroservice;
 
 
 import org.springframework.boot.SpringApplication;
