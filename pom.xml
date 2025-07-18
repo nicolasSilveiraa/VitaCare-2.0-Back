@@ -23,9 +23,9 @@
         <module>config-server</module>
         <module>auth-service</module>
 <!--        <module>patient-service</module>-->
-        <module>agenda-service</module>
-        <module>cadastro-paciente</module>
-        <module>convenio-paciente</module>
+        <module>agendamento-service</module>
+        <module>paciente-comando-service</module>
+        <module>convenio-service</module>
         <module>common-dtos</module>
     </modules>
 
