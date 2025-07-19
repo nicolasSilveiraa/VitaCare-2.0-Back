@@ -1,4 +1,4 @@
-package org.vitacare.professionalservice.dto;
+package org.vitacare.dtos.professional;
 
 public record SpecialtyDetailDTO(
         Integer id,

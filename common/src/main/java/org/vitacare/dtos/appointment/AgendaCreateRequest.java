@@ -1,14 +1,13 @@
 package org.vitacare.dtos.appointment;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDateTime;
 
 public record AgendaCreateRequest(
-    Long pacienteId,
-    LocalDate dataConsulta,
-    LocalTime horaConsulta,
-    String especialidade,
-    String medico,
-    String namePaciente,
-    LocalTime criadoEm
-){ }
+        @NotNull Long id,
+        @NotNull Long pacienteId,
+        @NotNull Long professionalId,
+        @NotNull Integer specialtyId,
+        @NotNull LocalDateTime agendamentoDateTime
+    ){ }

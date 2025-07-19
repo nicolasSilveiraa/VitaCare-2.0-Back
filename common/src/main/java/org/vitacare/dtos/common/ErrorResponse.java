@@ -1,6 +1,10 @@
 package org.vitacare.dtos.common;
+import java.time.LocalDateTime;
 
 public record ErrorResponse(
+        LocalDateTime timestamp,
         int status,
-        String mensagem
+        String error,
+        String message,
+        String path
 ) {}

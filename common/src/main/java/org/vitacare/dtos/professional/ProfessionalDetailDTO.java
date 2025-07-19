@@ -2,7 +2,7 @@ package org.vitacare.dtos.professional;
 
 import java.util.List;
 
-public record ProfessionalResponseDTO(
+public record ProfessionalDetailDTO(
         Long id,
         String fullName,
         String professionalLicense,
