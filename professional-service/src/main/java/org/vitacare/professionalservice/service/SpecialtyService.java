@@ -2,8 +2,8 @@ package org.vitacare.professionalservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.vitacare.professionalservice.dto.SpecialtyDetailDTO;
-import org.vitacare.professionalservice.dto.SpecialtySummaryDTO;
+import org.vitacare.dtos.professional.SpecialtyDetailDTO;
+import org.vitacare.dtos.professional.SpecialtySummaryDTO;
 import org.vitacare.professionalservice.exception.ResourceNotFoundException;
 import org.vitacare.professionalservice.model.Specialty;
 import org.vitacare.professionalservice.repository.SpecialtyRepository;

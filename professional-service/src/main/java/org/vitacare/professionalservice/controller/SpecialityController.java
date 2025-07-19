@@ -3,10 +3,9 @@ package org.vitacare.professionalservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
-import org.vitacare.professionalservice.dto.SpecialtyDetailDTO;
-import org.vitacare.professionalservice.dto.SpecialtySummaryDTO;
+import org.vitacare.dtos.professional.SpecialtyDetailDTO;
+import org.vitacare.dtos.professional.SpecialtySummaryDTO;
 import org.vitacare.professionalservice.service.SpecialtyService;
 
 import java.util.List;

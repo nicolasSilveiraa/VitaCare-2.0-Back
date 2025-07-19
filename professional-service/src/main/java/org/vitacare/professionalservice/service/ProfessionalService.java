@@ -3,9 +3,9 @@ package org.vitacare.professionalservice.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.vitacare.professionalservice.dto.ProfessionalRequestDTO;
-import org.vitacare.professionalservice.dto.ProfessionalResponseDTO;
-import org.vitacare.professionalservice.dto.SpecialtySummaryDTO;
+import org.vitacare.dtos.professional.ProfessionalRequestDTO;
+import org.vitacare.dtos.professional.ProfessionalDetailDTO;
+import org.vitacare.dtos.professional.SpecialtySummaryDTO;
 import org.vitacare.professionalservice.exception.ResourceAlreadyExistsException;
 import org.vitacare.professionalservice.exception.ResourceNotFoundException;
 import org.vitacare.professionalservice.model.Professional;
@@ -26,7 +26,7 @@ public class ProfessionalService {
     private final ProfessionalRepository professionalRepository;
     private final SpecialtyRepository specialtyRepository;
 
-    public List<ProfessionalResponseDTO> findProfessionals(String name, Integer specialtyId) {
+    public List<ProfessionalDetailDTO> findProfessionals(String name, Integer specialtyId) {
 
         Specification<Professional> spec = ProfessionalSpecification.hasName(name);
 
@@ -38,14 +38,14 @@ public class ProfessionalService {
                 .collect(Collectors.toList());
     }
 
-    public ProfessionalResponseDTO findProfessionalById(Long id) {
+    public ProfessionalDetailDTO findProfessionalById(Long id) {
         Professional professional = professionalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Profissional não encontrado com o ID: " + id));
 
         return convertToDTO(professional);
     }
 
-    public ProfessionalResponseDTO createProfessional(ProfessionalRequestDTO requestDTO) {
+    public ProfessionalDetailDTO createProfessional(ProfessionalRequestDTO requestDTO) {
 
         if (professionalRepository.findByProfessionalLicense(requestDTO.professionalLicense()).isPresent()) {
             throw new ResourceAlreadyExistsException("Já existe um profissional com a licença: " + requestDTO.professionalLicense());
@@ -67,7 +67,7 @@ public class ProfessionalService {
         return convertToDTO(savedProfessional);
     }
 
-    public ProfessionalResponseDTO patchProfessional(Long id, Map<String, Object> updates) {
+    public ProfessionalDetailDTO patchProfessional(Long id, Map<String, Object> updates) {
         Professional professionalToUpdate = professionalRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Profissional não encontrado com o ID: " + id));
 
@@ -105,7 +105,7 @@ public class ProfessionalService {
         professionalRepository.deleteById(id);
     }
 
-    private ProfessionalResponseDTO convertToDTO(Professional professional) {
+    private ProfessionalDetailDTO convertToDTO(Professional professional) {
         List<SpecialtySummaryDTO> specialtySummaries = professional.getSpecialties().stream()
                 .map(specialty -> new SpecialtySummaryDTO(
                     specialty.getId(),
@@ -113,7 +113,7 @@ public class ProfessionalService {
                 .toList();
 
 
-        return new ProfessionalResponseDTO(
+        return new ProfessionalDetailDTO(
                 professional.getId(),
                 professional.getFullName(),
                 professional.getProfessionalLicense(),
