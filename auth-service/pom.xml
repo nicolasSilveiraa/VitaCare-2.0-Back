@@ -92,10 +92,11 @@
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
         </dependency>
+        <!-- Dependência para a biblioteca compartilhada de DTOs -->
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.8.9</version>
+            <groupId>org.vitacare</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
     </dependencies>

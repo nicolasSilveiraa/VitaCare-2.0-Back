@@ -1,4 +1,4 @@
-package org.vitacare.pacientecomandoservice.repository;
+package org.vitacare.convenio.client;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
@@ -11,19 +11,19 @@ import java.util.List;
 @FeignClient(name = "convenio-service")
 public interface ConvenioClient {
 
-    @GetMapping("/planos")
+    @GetMapping("/api/v1/planos")
     List<PlanosResponse> getListaPlanos();
 
-    @GetMapping("/planos/{id}")
+    @GetMapping("/api/v1/planos/{id}")
     PlanosResponse buscarPlanoPorId(@PathVariable Long id);
 
-    @PostMapping("/planos")
+    @PostMapping("/api/v1/planos")
     void cadastrarPlano(@RequestBody PlanosRequest planosRequest);
 
-    @PutMapping("/planos/{id}")
+    @PutMapping("/api/v1/planos/{id}")
     void atualizarPlano(@RequestBody PlanosRequest planosRequest, @PathVariable Long id);
 
-    @DeleteMapping("/planos/{id}")
+    @DeleteMapping("/api/v1/planos/{id}")
     void deletarPlano(@PathVariable Long id);
 
 }
