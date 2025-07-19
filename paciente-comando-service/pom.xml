@@ -48,11 +48,39 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
+        <!-- JWT -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Dependência para a biblioteca compartilhada de DTOs -->
         <dependency>
             <groupId>org.vitacare</groupId>
-            <artifactId>common-dtos</artifactId>
-            <version>${project.version}</version>
+            <artifactId>convenio-client</artifactId>
         </dependency>
 
         <!-- Outras Dependências -->
@@ -79,7 +107,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>org.vitacare.cadastroservice.CadastroServiceApplication.java</mainClass>
+                    <mainClass>org.vitacare.pacientecomandoservice.CadastroServiceApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

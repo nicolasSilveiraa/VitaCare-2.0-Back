@@ -1,10 +1,11 @@
-package org.vitacare.cadastroservice.controller;
+package org.vitacare.pacientecomandoservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.vitacare.dtos.patient.PacienteCreateRequest;
-import org.vitacare.cadastroservice.model.PacienteModel;
-import org.vitacare.cadastroservice.service.PacienteService;
+import org.vitacare.pacientecomandoservice.model.PacienteModel;
+import org.vitacare.pacientecomandoservice.service.PacienteService;
 
 import java.util.List;
 
@@ -15,27 +16,33 @@ public class PacienteController {
 
     private final PacienteService pacienteService;
 
+    //TODO: MOVER OS METODOS GET PARA O PACIENTE-CONSULTA-SERVICE
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
     public List<PacienteModel> getPaciente() {
         return pacienteService.buscarPaciente();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
     public PacienteModel getPacienteId(@PathVariable Long id) throws Exception{
         return pacienteService.buscarPacientePorId(id);
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
     public void adicionarPaciente(@RequestBody PacienteCreateRequest pacienteCreateRequest) throws Exception {
         pacienteService.cadastrarPaciente(pacienteCreateRequest);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
     public void atualizarPaciente(@RequestBody PacienteCreateRequest pacienteCreateRequest, @PathVariable Long id) throws Exception {
         pacienteService.alterarPaciente(pacienteCreateRequest, id);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
     public void excluirPaciente(@PathVariable Long id) throws Exception {
         pacienteService.excluirPaciente(id);
     }

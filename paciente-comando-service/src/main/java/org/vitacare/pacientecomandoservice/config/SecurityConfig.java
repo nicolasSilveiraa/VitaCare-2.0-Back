@@ -1,4 +1,4 @@
-package org.vitacare.cadastroservice.config;
+package org.vitacare.pacientecomandoservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.vitacare.professionalservice.config.JwtAuthFilter;
+import org.vitacare.pacientecomandoservice.config.JwtAuthFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -29,7 +29,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers(HttpMethod.GET, "/api/v1/patients/**").permitAll()
+                        .requestMatchers("/api/v1/patients/**").hasAnyRole("RECEPTIONIST", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

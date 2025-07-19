@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients(basePackages = "org.vitacare")
 public class CadastroServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(CadastroServiceApplication.class, args);

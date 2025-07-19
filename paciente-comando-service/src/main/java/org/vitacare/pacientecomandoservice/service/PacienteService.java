@@ -1,15 +1,18 @@
-package org.vitacare.cadastroservice.service;
+package org.vitacare.pacientecomandoservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.vitacare.dtos.patient.PacienteCreateRequest;
 import org.vitacare.dtos.healthplan.PlanosResponse;
-import org.vitacare.cadastroservice.exception.PacienteCadastradoException;
-import org.vitacare.cadastroservice.exception.PacienteExisteException;
-import org.vitacare.cadastroservice.model.PacienteModel;
-import org.vitacare.cadastroservice.repository.ConvenioClient;
-import org.vitacare.cadastroservice.repository.PacienteRepository;
+import org.vitacare.dtos.patient.PacienteResponse;
+import org.vitacare.pacientecomandoservice.exception.InvalidRequestException;
+import org.vitacare.pacientecomandoservice.exception.PacienteCadastradoException;
+import org.vitacare.pacientecomandoservice.exception.PacienteExisteException;
+import org.vitacare.pacientecomandoservice.model.PacienteModel;
+import org.vitacare.convenio.client.ConvenioClient;
+import org.vitacare.pacientecomandoservice.repository.PacienteRepository;
 
 import java.util.List;
 
@@ -47,6 +50,11 @@ public class PacienteService {
         verificarPacienteCriado(pacienteCreateRequest);
         PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
         if (pacienteCreateRequest.convenio() && pacienteCreateRequest.idPlano() != null) {
+            try {
+                convenioClient.buscarPlanoPorId(pacienteCreateRequest.idPlano());
+            } catch (FeignException.NotFound e) {
+                throw new InvalidRequestException("O plano de saude com ID " +  pacienteCreateRequest.idPlano() + "não foi encontrado.");
+            }
             PlanosResponse planos = convenioClient.buscarPlanoPorId(pacienteCreateRequest.idPlano());
             pacienteModel.setIdPlano(planos.id());
         }else {
@@ -72,6 +80,19 @@ public class PacienteService {
         verificarPacienteExiste(id);
 
 
+    }
+
+    private PacienteResponse convertToResponseDTO(PacienteModel paciente) {
+        return new PacienteResponse(
+                paciente.getIdPaciente(),
+                paciente.getNomePaciente(),
+                paciente.getDataNascimento(),
+                paciente.getSexoPaciente(),
+                paciente.getEndereco(),
+                paciente.getConvenio(),
+                paciente.getIdPlano(),
+                paciente.getCpf()
+        );
     }
 
 

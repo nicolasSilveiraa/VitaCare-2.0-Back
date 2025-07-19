@@ -1,4 +1,4 @@
-package org.vitacare.cadastroservice.config;
+package org.vitacare.pacientecomandoservice.config;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -14,7 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.vitacare.professionalservice.service.JwtService;
+import org.vitacare.pacientecomandoservice.service.JwtService;
 
 import java.io.IOException;
 import java.util.Collections;
