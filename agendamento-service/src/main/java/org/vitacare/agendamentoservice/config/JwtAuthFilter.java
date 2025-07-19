@@ -1,4 +1,4 @@
-package org.vitacare.agendaservice.config;
+package org.vitacare.agendamentoservice.config;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -14,7 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.vitacare.agendaservice.service.JwtService;
+import org.vitacare.agendamentoservice.service.JwtService;
 
 import java.io.IOException;
 import java.util.Collections;

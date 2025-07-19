@@ -1,13 +1,24 @@
-package org.vitacare.agendaservice.service;
+package org.vitacare.agendamentoservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.vitacare.agendamentoservice.exception.InvalidRequestException;
+import org.vitacare.agendamentoservice.exception.ResourceNotFoundException;
 import org.vitacare.dtos.appointment.AgendaCreateRequest;
-import org.vitacare.agendaservice.model.AgendaModel;
-import org.vitacare.agendaservice.repository.AgendaRepository;
+import org.vitacare.agendamentoservice.model.AgendaModel;
+import org.vitacare.agendamentoservice.repository.AgendaRepository;
+import org.vitacare.dtos.appointment.AgendamentoResponse;
+import org.vitacare.dtos.patient.PacienteSummaryDTO;
+import org.vitacare.dtos.professional.ProfessionalSummaryDTO;
+import org.vitacare.dtos.professional.SpecialtySummaryDTO;
+import org.vitacare.paciente.client.PacienteQueryClient;
+import org.vitacare.professionals.client.ProfessionalClient;
+import org.vitacare.professionals.client.SpecialtyClient;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,34 +27,52 @@ public class AgendaService {
     private final AgendaRepository agendaRepository;
     private final ObjectMapper objectMapper;
 
+    private final PacienteQueryClient pacienteClient;
+    private final ProfessionalClient professionalClient;
+    private final SpecialtyClient specialtyClient;
 
-    public List<AgendaModel> buscarAgenda(){
-        return agendaRepository.findAll();
+
+    public List<AgendamentoResponse> buscarTodasAgendas(){
+        return agendaRepository.findAll().stream()
+                .map(this::agendamentoCompleto)
+                .collect(Collectors.toList());
     }
 
 
     public void verificarAgendaExiste(Long id)throws Exception{
     if (!agendaRepository.existsById(id)) {
         throw new Exception("Agenda não encontrada com o ID: " + id);
-    }
-    }
-
-    public AgendaModel buscarAgendaPorId(Long id) throws Exception {
-        verificarAgendaExiste(id);
-        return agendaRepository.findById(id).get();
+        }
     }
 
-    public void adicionarAgenda(AgendaCreateRequest agendaCreateRequest) throws Exception {
-        boolean existe = agendaRepository.existsByMedicoAndDataConsultaAndHoraConsulta(
-                agendaCreateRequest.medico(),
-                agendaCreateRequest.dataConsulta(),
-                agendaCreateRequest.horaConsulta()
+    public AgendamentoResponse buscarAgendaPorId(Long id) {
+        AgendaModel agendamento = agendaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Agenda não encontrada com o ID: " + id));
+        return agendamentoCompleto(agendamento);
+    }
+
+    public AgendamentoResponse adicionarAgenda(AgendaCreateRequest request) throws Exception {
+
+        PacienteSummaryDTO paciente = validarPaciente(request.pacienteId());
+        ProfessionalSummaryDTO profissional = validarProfissional(request.professionalId());
+        SpecialtySummaryDTO especialidade = validarEspecialidade(request.specialtyId());
+
+        boolean existe = agendaRepository.existsByProfissionalIdAndDataHoraAgendamento(
+                request.professionalId(),
+                request.agendamentoDateTime()
         );
         if (existe) {
             throw new Exception("Já existe um agendamento para este médico neste horário.");
         }
-        AgendaModel agendaModel = objectMapper.convertValue(agendaCreateRequest, AgendaModel.class);
-        agendaRepository.save(agendaModel);
+        AgendaModel novoAgendamento = objectMapper.convertValue(request, AgendaModel.class);
+        agendaRepository.save(novoAgendamento);
+
+        return new AgendamentoResponse(
+                novoAgendamento.getIdAgenda(),
+                novoAgendamento.getDataHoraAgendamento(),
+                paciente,
+                profissional,
+                especialidade
+        );
     }
 
     public void atualizarAgenda(Long id, AgendaCreateRequest agendaCreateRequest) throws Exception {
@@ -58,14 +87,56 @@ public class AgendaService {
         agendaRepository.deleteById(id);
     }
 
-    public List<AgendaModel> buscarAgendaPorMedico(String medico) {
-        return agendaRepository.findAllByMedico(medico);
+    public List<AgendamentoResponse> buscarAgendaPorMedico(Long profissionalId) {
+        validarProfissional(profissionalId);
+        return agendaRepository.findAllByProfissionalId(profissionalId).stream()
+                .map(this::agendamentoCompleto)
+                .collect(Collectors.toList());
     }
 
-    public List<AgendaModel> buscarAgendaPorEspecialidade(String especialidade) {
-        return agendaRepository.findAllByEspecialidade(especialidade);
+    public List<AgendamentoResponse> buscarAgendaPorEspecialidade(Integer especialidadeId) {
+        validarEspecialidade(especialidadeId);
+        return agendaRepository.findAllByEspecialidadeId(especialidadeId).stream()
+                .map(this::agendamentoCompleto)
+                .collect(Collectors.toList());
     }
 
+    private AgendamentoResponse agendamentoCompleto(AgendaModel agendamento) {
+        PacienteSummaryDTO patient = pacienteClient.getPacienteSummaryById(agendamento.getPacienteId());
+        ProfessionalSummaryDTO professional = professionalClient.getProfessionalSummaryById(agendamento.getProfissionalId());
+        SpecialtySummaryDTO specialty = specialtyClient.getSpecialtySummaryById(agendamento.getEspecialidadeId());
 
+        return new AgendamentoResponse(
+                agendamento.getIdAgenda(),
+                agendamento.getDataHoraAgendamento(),
+                patient,
+                professional,
+                specialty
+        );
+    }
+
+    private PacienteSummaryDTO validarPaciente(Long id) {
+        try {
+            return pacienteClient.getPacienteSummaryById(id);
+        } catch (FeignException.NotFound e) {
+            throw new InvalidRequestException("Paciente com ID " + id + " não encontrado.");
+        }
+    }
+
+    private ProfessionalSummaryDTO validarProfissional(Long id) {
+        try {
+            return professionalClient.getProfessionalSummaryById(id);
+        } catch (FeignException.NotFound e) {
+            throw new InvalidRequestException("Profissional com ID " + id + " não encontrado.");
+        }
+    }
+
+    private SpecialtySummaryDTO validarEspecialidade(Integer id) {
+        try {
+            return specialtyClient.getSpecialtySummaryById(id);
+        } catch (FeignException.NotFound e) {
+            throw new InvalidRequestException("Especialidade com ID " + id + " não encontrada.");
+        }
+    }
 }
 

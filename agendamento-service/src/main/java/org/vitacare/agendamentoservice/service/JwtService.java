@@ -1,4 +1,4 @@
-package org.vitacare.agendaservice.service;
+package org.vitacare.agendamentoservice.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

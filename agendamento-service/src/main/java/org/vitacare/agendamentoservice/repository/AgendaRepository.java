@@ -1,27 +1,23 @@
-package org.vitacare.agendaservice.repository;
+package org.vitacare.agendamentoservice.repository;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-import org.vitacare.agendaservice.model.AgendaModel;
+import org.vitacare.agendamentoservice.model.AgendaModel;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 
 
 public interface AgendaRepository extends JpaRepository<AgendaModel, Long>, JpaSpecificationExecutor<AgendaModel> {
-    boolean existsByMedico(String medico);
-    boolean existsByEspecialidade(String especialidade);
+    List<AgendaModel> findAllByProfissionalId(Long  professionalId);
 
-    List<AgendaModel> findAllByMedico(String medico);
+    List<AgendaModel> findAllByEspecialidadeId(Integer especialidadeId);
 
-    List<AgendaModel> findAllByEspecialidade(String especialidade);
-
-    boolean existsByMedicoAndDataConsultaAndHoraConsulta(String medico, LocalDate dataConsulta, LocalTime horaConsulta);
+    boolean existsByProfissionalIdAndDataHoraAgendamento(Long professionalId, LocalDateTime dataHoraAgendamento);
 }
 
 

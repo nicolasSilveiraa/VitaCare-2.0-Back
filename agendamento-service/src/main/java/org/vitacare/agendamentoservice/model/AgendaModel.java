@@ -1,4 +1,4 @@
-package org.vitacare.agendaservice.model;
+package org.vitacare.agendamentoservice.model;
 
 
 import jakarta.persistence.*;
@@ -17,7 +17,7 @@ import java.time.LocalTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "agendamento")
+@Table(name = "agendamentos")
 
 public class AgendaModel {
 
@@ -26,23 +26,17 @@ public class AgendaModel {
     @Column(name = "id")
     private Long idAgenda;
 
-    @Column(name = "paciente_id")
+    @Column(name = "medico", nullable = false)
+    private Long profissionalId;
+
+    @Column(name = "paciente_id", nullable = false)
     private Long pacienteId;
 
-    @Column(name = "data_consulta")
-    private LocalDate dataConsulta;
+    @Column(name = "especialidade_id", nullable = false)
+    private Integer especialidadeId;
 
-    @Column(name = "hora_consulta")
-    private LocalTime horaConsulta;
-
-    @Column(name = "especialidade")
-    private String especialidade;
-
-    @Column(name = "medico")
-    private String medico;
-
-    @Column(name = "name_paciente")
-    private String namePaciente;
+    @Column(name = "data_hora_agendamento", nullable = false)
+    private LocalDateTime dataHoraAgendamento;
 
     @CreationTimestamp
     @Column(name = "criado_em", nullable = false, updatable = false)

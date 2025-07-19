@@ -1,4 +1,4 @@
-package org.vitacare.agendaservice.config;
+package org.vitacare.agendamentoservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

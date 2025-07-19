@@ -1,4 +1,4 @@
-package org.vitacare.agendaservice;
+package org.vitacare.agendamentoservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,10 +7,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients(basePackages = "org.vitacare")
 
-public class AgendaApiService {
+public class AgendamentoServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AgendaApiService.class, args);
+        SpringApplication.run(AgendamentoServiceApplication.class, args);
     }
 }

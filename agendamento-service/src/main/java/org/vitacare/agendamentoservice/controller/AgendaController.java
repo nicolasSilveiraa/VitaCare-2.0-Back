@@ -1,14 +1,16 @@
-package org.vitacare.agendaservice.controller;
+package org.vitacare.agendamentoservice.controller;
 
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.vitacare.dtos.appointment.AgendaCreateRequest;
-import org.vitacare.agendaservice.model.AgendaModel;
-import org.vitacare.agendaservice.service.AgendaService;
+import org.vitacare.agendamentoservice.model.AgendaModel;
+import org.vitacare.agendamentoservice.service.AgendaService;
+import org.vitacare.dtos.appointment.AgendamentoResponse;
 
 import java.util.List;
 
@@ -23,23 +25,23 @@ public class AgendaController {
     // GET /api/agendamentos
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<List<AgendaModel>> buscarTodasAgendas() {
-        return ResponseEntity.ok(agendaService.buscarAgenda());
+    public ResponseEntity<List<AgendamentoResponse>> buscarTodasAgendas() {
+        return ResponseEntity.ok(agendaService.buscarTodasAgendas());
     }
 
     // GET /api/agendamentos/{id}
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<AgendaModel> buscarPorId(@PathVariable Long id) throws Exception {
+    public ResponseEntity<AgendamentoResponse> buscarPorId(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(agendaService.buscarAgendaPorId(id));
     }
 
     // POST /api/agendamentos
     @PostMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> criarAgenda(@RequestBody AgendaCreateRequest request) throws Exception {
-        agendaService.adicionarAgenda(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AgendamentoResponse> criarAgenda(@RequestBody AgendaCreateRequest request) throws Exception {
+        AgendamentoResponse novoAgendamento = agendaService.adicionarAgenda(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoAgendamento);
     }
 
     // PUT /api/agendamentos/{id}
@@ -59,16 +61,16 @@ public class AgendaController {
     }
 
     // GET /api/agendamentos/medico/{nome}
-    @GetMapping("/medico/{nome}")
+    @GetMapping("/medico/{profissionalId}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<List<AgendaModel>> buscarPorMedico(@PathVariable String nome) {
-        return ResponseEntity.ok(agendaService.buscarAgendaPorMedico(nome));
+    public ResponseEntity<List<AgendamentoResponse>> buscarPorMedico(@PathVariable Long profissionalId) {
+        return ResponseEntity.ok(agendaService.buscarAgendaPorMedico(profissionalId));
     }
 
     // GET /api/agendamentos/especialidade/{especialidade}
-    @GetMapping("/especialidade/{especialidade}")
+    @GetMapping("/especialidade/{especialidadeId}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public ResponseEntity<List<AgendaModel>> buscarPorEspecialidade(@PathVariable String especialidade) {
-        return ResponseEntity.ok(agendaService.buscarAgendaPorEspecialidade(especialidade));
+    public ResponseEntity<List<AgendamentoResponse>> buscarPorEspecialidade(@PathVariable Integer especialidadeId) {
+        return ResponseEntity.ok(agendaService.buscarAgendaPorEspecialidade(especialidadeId));
     }
 }
