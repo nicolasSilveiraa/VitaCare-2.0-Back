@@ -1,4 +1,4 @@
-package org.vitacare.cadastroservice.repository;
+package org.vitacare.pacientecomandoservice.repository;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
@@ -8,7 +8,7 @@ import org.vitacare.dtos.healthplan.PlanosResponse;
 
 import java.util.List;
 
-@FeignClient(name = "convenio-paciente", url = "http://localhost:8082")
+@FeignClient(name = "convenio-service")
 public interface ConvenioClient {
 
     @GetMapping("/planos")
