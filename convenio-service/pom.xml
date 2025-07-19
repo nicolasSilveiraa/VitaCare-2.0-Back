@@ -54,7 +54,7 @@
         <!-- Dependência para a biblioteca compartilhada de DTOs -->
         <dependency>
             <groupId>org.vitacare</groupId>
-            <artifactId>common-dtos</artifactId>
+            <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
 
