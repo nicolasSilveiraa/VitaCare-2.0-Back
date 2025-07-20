@@ -24,9 +24,11 @@
         <module>auth-service</module>
         <module>agendamento-service</module>
         <module>paciente-comando-service</module>
+        <module>emergencia-service</module>
         <module>convenio-service</module>
-        <module>common</module>
         <module>professional-service</module>
+
+        <module>common</module>
         <module>professional-client</module>
         <module>convenio-client</module>
         <module>paciente-client</module>

@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.web.bind.annotation.*;
 import org.vitacare.dtos.professional.ProfessionalRequestDTO;
 import org.vitacare.dtos.professional.ProfessionalDetailDTO;
+import org.vitacare.dtos.professional.ProfessionalSummaryDTO;
 import org.vitacare.professionalservice.service.ProfessionalService;
 
 import java.util.List;
@@ -36,6 +37,13 @@ class ProfessionalController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ProfessionalDetailDTO> getProfessionalById(@PathVariable Long id) {
         ProfessionalDetailDTO professional = professionalService.findProfessionalById(id);
+        return ResponseEntity.ok(professional);
+    }
+
+    @GetMapping("/{id}/summary")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ProfessionalSummaryDTO> getProfessionalSummaryById(@PathVariable Long id) {
+        ProfessionalSummaryDTO professional = professionalService.findProfessionalSummaryById(id);
         return ResponseEntity.ok(professional);
     }
 

@@ -27,8 +27,7 @@ public class SecurityConfigAgenda {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/agendamentos/**").authenticated()
-                        .anyRequest().denyAll()
+                        .anyRequest().authenticated()
                 );
 
         return http.build();

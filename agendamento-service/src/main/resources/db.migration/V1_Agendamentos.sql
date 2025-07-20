@@ -4,7 +4,7 @@
 ALTER TABLE agendamento RENAME TO agendamentos;
 
 -- Renomeia colunas existentes para o novo padrão
-ALTER TABLE agendamentos RENAME COLUMN id TO id; -- Já está ok, mas por consistência
+ALTER TABLE agendamentos RENAME COLUMN id TO id;
 ALTER TABLE agendamentos RENAME COLUMN medico TO profissional_id;
 ALTER TABLE agendamentos RENAME COLUMN especialidade TO especialidade_id;
 

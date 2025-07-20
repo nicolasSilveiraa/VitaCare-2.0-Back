@@ -26,7 +26,7 @@ public class AgendaModel {
     @Column(name = "id")
     private Long idAgenda;
 
-    @Column(name = "medico", nullable = false)
+    @Column(name = "profissionalId", nullable = false)
     private Long profissionalId;
 
     @Column(name = "paciente_id", nullable = false)

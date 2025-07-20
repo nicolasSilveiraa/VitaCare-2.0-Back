@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.vitacare.dtos.professional.ProfessionalRequestDTO;
 import org.vitacare.dtos.professional.ProfessionalDetailDTO;
+import org.vitacare.dtos.professional.ProfessionalSummaryDTO;
 import org.vitacare.dtos.professional.SpecialtySummaryDTO;
 import org.vitacare.professionalservice.exception.ResourceAlreadyExistsException;
 import org.vitacare.professionalservice.exception.ResourceNotFoundException;
@@ -43,6 +44,20 @@ public class ProfessionalService {
                 .orElseThrow(() -> new ResourceNotFoundException("Profissional não encontrado com o ID: " + id));
 
         return convertToDTO(professional);
+    }
+
+    public ProfessionalSummaryDTO findProfessionalSummaryById(Long id) {
+        ProfessionalDetailDTO professionalDetail = this.findProfessionalById(id);
+
+        List<String> specialtyNames = professionalDetail.specialties().stream()
+                .map(SpecialtySummaryDTO::name)
+                .collect(Collectors.toList());
+
+        return new ProfessionalSummaryDTO(
+                professionalDetail.id(),
+                professionalDetail.fullName(),
+                specialtyNames
+        );
     }
 
     public ProfessionalDetailDTO createProfessional(ProfessionalRequestDTO requestDTO) {

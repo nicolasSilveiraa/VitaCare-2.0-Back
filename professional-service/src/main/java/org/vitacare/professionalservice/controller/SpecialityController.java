@@ -29,4 +29,11 @@ public class SpecialityController {
         return ResponseEntity.ok(specialtyService.findById(id));
     }
 
+    @GetMapping("/{id}/summary")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<SpecialtySummaryDTO> getSpecialtySummaryById(@PathVariable Integer id) {
+        return ResponseEntity.ok(specialtyService.findSummaryById(id));
+    }
+
+
 }

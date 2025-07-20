@@ -28,6 +28,11 @@ public class SpecialtyService {
         return convertToDetailDTO(specialty);
     }
 
+    public SpecialtySummaryDTO findSummaryById(Integer id) {
+        Specialty specialty = findSpecialtyById(id);
+        return convertToSummaryDTO(specialty);
+    }
+
     private SpecialtySummaryDTO convertToSummaryDTO(Specialty specialty) {
         return new SpecialtySummaryDTO(specialty.getId(), specialty.getName());
     }

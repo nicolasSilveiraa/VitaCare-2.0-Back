@@ -53,12 +53,12 @@ public class AgendaService {
     public AgendamentoResponse adicionarAgenda(AgendaCreateRequest request) throws Exception {
 
         PacienteSummaryDTO paciente = validarPaciente(request.pacienteId());
-        ProfessionalSummaryDTO profissional = validarProfissional(request.professionalId());
-        SpecialtySummaryDTO especialidade = validarEspecialidade(request.specialtyId());
+        ProfessionalSummaryDTO profissional = validarProfissional(request.profissionalId());
+        SpecialtySummaryDTO especialidade = validarEspecialidade(request.especialidadeId());
 
         boolean existe = agendaRepository.existsByProfissionalIdAndDataHoraAgendamento(
-                request.professionalId(),
-                request.agendamentoDateTime()
+                request.profissionalId(),
+                request.dataHoraAgendamento()
         );
         if (existe) {
             throw new Exception("Já existe um agendamento para este médico neste horário.");
@@ -120,6 +120,8 @@ public class AgendaService {
             return pacienteClient.getPacienteSummaryById(id);
         } catch (FeignException.NotFound e) {
             throw new InvalidRequestException("Paciente com ID " + id + " não encontrado.");
+        } catch (FeignException.Forbidden e) {
+            throw new InvalidRequestException("Acesso negado ao buscar dados do paciente com ID " + ". Verifique as permissões.");
         }
     }
 
@@ -128,6 +130,8 @@ public class AgendaService {
             return professionalClient.getProfessionalSummaryById(id);
         } catch (FeignException.NotFound e) {
             throw new InvalidRequestException("Profissional com ID " + id + " não encontrado.");
+        } catch (FeignException.Forbidden e) {
+            throw new InvalidRequestException("Acesso negado ao buscar dados do profissional com ID " + ". Verifique as permissões.");
         }
     }
 
@@ -136,6 +140,8 @@ public class AgendaService {
             return specialtyClient.getSpecialtySummaryById(id);
         } catch (FeignException.NotFound e) {
             throw new InvalidRequestException("Especialidade com ID " + id + " não encontrada.");
+        } catch (FeignException.Forbidden e) {
+            throw new InvalidRequestException("Acesso negado ao buscar dados do paciente com ID " + ". Verifique as permissões.");
         }
     }
 }

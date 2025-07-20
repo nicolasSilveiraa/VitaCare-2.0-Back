@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.vitacare.dtos.patient.PacienteCreateRequest;
 import org.vitacare.dtos.healthplan.PlanosResponse;
 import org.vitacare.dtos.patient.PacienteResponse;
+import org.vitacare.dtos.patient.PacienteSummaryDTO;
 import org.vitacare.pacientecomandoservice.exception.InvalidRequestException;
 import org.vitacare.pacientecomandoservice.exception.PacienteCadastradoException;
 import org.vitacare.pacientecomandoservice.exception.PacienteExisteException;
@@ -54,6 +55,8 @@ public class PacienteService {
                 convenioClient.buscarPlanoPorId(pacienteCreateRequest.idPlano());
             } catch (FeignException.NotFound e) {
                 throw new InvalidRequestException("O plano de saude com ID " +  pacienteCreateRequest.idPlano() + "não foi encontrado.");
+            } catch (FeignException.Forbidden e) {
+                throw new InvalidRequestException("Acesso negado ao buscar dados do paciente com ID " + ". Verifique as permissões.");
             }
             PlanosResponse planos = convenioClient.buscarPlanoPorId(pacienteCreateRequest.idPlano());
             pacienteModel.setIdPlano(planos.id());
@@ -80,6 +83,15 @@ public class PacienteService {
         verificarPacienteExiste(id);
 
 
+    }
+
+    public PacienteSummaryDTO buscarPacienteSummaryPorId(Long id) throws Exception {
+        PacienteModel paciente = buscarPacientePorId(id);
+
+        return new PacienteSummaryDTO(
+                paciente.getIdPaciente(),
+                paciente.getNomePaciente()
+        );
     }
 
     private PacienteResponse convertToResponseDTO(PacienteModel paciente) {

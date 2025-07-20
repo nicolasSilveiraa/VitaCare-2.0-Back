@@ -7,12 +7,12 @@ import org.vitacare.dtos.professional.SpecialtySummaryDTO;
 
 import java.util.List;
 
-@FeignClient(name = "professionals-service", path = "/api/v1/specialties")
+@FeignClient(name = "professional-service", contextId = "specialtyClient", path = "/api/v1/specialties")
 public interface SpecialtyClient {
 
     @GetMapping("/summary")
     List<SpecialtySummaryDTO> getSpecialties();
 
-    @GetMapping("/api/v1/specialties/{id}/summary")
+    @GetMapping("/{id}/summary")
     SpecialtySummaryDTO getSpecialtySummaryById(@PathVariable("id") Integer id);
 }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public record AgendamentoResponse(
         Long id,
-        LocalDateTime agendamentoDateTime,
+        LocalDateTime dataHoraAgendamento,
         PacienteSummaryDTO patient,
         ProfessionalSummaryDTO professional,
         SpecialtySummaryDTO specialty

@@ -29,7 +29,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers("/api/v1/patients/**").hasAnyRole("RECEPTIONIST", "ADMIN")
+                        .requestMatchers("/api/v1/pacientes/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

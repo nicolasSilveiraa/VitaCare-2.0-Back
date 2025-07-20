@@ -8,12 +8,12 @@ import org.vitacare.dtos.professional.ProfessionalSummaryDTO;
 
 import java.util.List;
 
-@FeignClient(name = "professional-service", path = "/api/v1/professionals")
+@FeignClient(name = "professional-service", contextId = "professionalClient", path = "/api/v1/professionals")
 public interface ProfessionalClient {
 
     @GetMapping
     List<ProfessionalSummaryDTO> findProfessionalsBySpecialty(@RequestParam("specialtyId") Integer specialtyId);
 
-    @GetMapping("/api/v1/professionals/{id}/summary")
+    @GetMapping("/{id}/summary")
     ProfessionalSummaryDTO getProfessionalSummaryById(@PathVariable("id") Long id);
 }
