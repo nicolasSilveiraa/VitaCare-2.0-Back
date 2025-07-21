@@ -27,7 +27,6 @@
         <module>emergencia-service</module>
         <module>convenio-service</module>
         <module>professional-service</module>
-        <module>patient-service</module>
         <module>common</module>
         <module>professional-client</module>
         <module>convenio-client</module>
