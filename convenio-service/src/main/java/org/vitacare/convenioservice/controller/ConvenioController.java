@@ -17,13 +17,14 @@ public class ConvenioController {
 
     private final ConvenioService convenioService;
 
-
-    @GetMapping
+    // ADICIONAR rota específica para listar
+    @GetMapping("/listar")
     public List<ConvenioModel> getConvenio() {
         return convenioService.listaConvenio();
     }
 
-    @GetMapping("{id}")
+    // Manter a rota para buscar por ID
+    @GetMapping("/{id}")
     public ConvenioComPlanosResponse getConvenioPorId(@PathVariable Long id) throws Exception {
         return convenioService.buscarConvenioComPlanosResponse(id);
     }
@@ -38,14 +39,13 @@ public class ConvenioController {
         convenioService.cadastrarConvenioComPlanos(convenioComPlanosRequest);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public void alterarPlanoComConvenio(@RequestBody ConvenioComPlanosRequest convenioRequest, @PathVariable Long id) throws Exception {
         convenioService.alterarConvenioComPlanos(id, convenioRequest);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deletarConvenio(@PathVariable Long id) throws Exception {
         convenioService.deletarConvenio(id);
     }
-
 }

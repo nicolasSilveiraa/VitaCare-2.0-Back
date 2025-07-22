@@ -20,6 +20,7 @@ import org.vitacare.dtos.healthplan.PlanosRequest;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -80,38 +81,38 @@ public class ConvenioService {
                                 novaEspecialidade.setNome(enumNome);
                                 return especialidadeRepository.save(novaEspecialidade);
                             }))
-                    .toList();
+                    .collect(Collectors.toList()); // Changed from .toList() to .collect(Collectors.toList())
 
             plano.setEspecialidades(especialidades);
             return plano;
-        }).toList();
+        }).collect(Collectors.toList()); // Changed from .toList() to .collect(Collectors.toList())
 
         convenioModel.setPlanos(listaPlanos);
         convenio.save(convenioModel);
     }
 
-
     public void alterarConvenioComPlanos(Long idConvenio, ConvenioComPlanosRequest request) throws Exception {
         verificarConvenioExiste(idConvenio);
         ConvenioModel convenioModel = convenio.getReferenceById(idConvenio);
-
+    
         convenioModel.setNomeConvenio(request.nomeConvenio());
         convenioModel.setCnpjConvenio(request.cnpjConvenio());
-
-        // Limpar planos existentes
-        convenioModel.getPlanos().clear();
-
-        // Criar novos planos com especialidades
+    
+        // Get the existing collection and clear it (this preserves the collection reference)
+        List<Planos> planosExistentes = convenioModel.getPlanos();
+        planosExistentes.clear();
+    
+        // Create new plans and add them to the existing collection
         List<Planos> novosPlanos = request.planos().stream().map(planoReq -> {
             Planos plano = new Planos();
             plano.setNome(planoReq.nome());
             plano.setConvenioModel(convenioModel);
-
-            // Processar especialidades (igual ao método de cadastro)
+    
+            // Process specialties (same as registration method)
             List<EspecialidadeEnum> especialidadesEnum = planoReq.especialidades() != null
                     ? planoReq.especialidades()
                     : Collections.<EspecialidadeEnum>emptyList();
-
+    
             List<Especialidade> especialidades = especialidadesEnum.stream()
                     .map(enumNome -> especialidadeRepository.findByNome(enumNome)
                             .orElseGet(() -> {
@@ -119,13 +120,15 @@ public class ConvenioService {
                                 novaEspecialidade.setNome(enumNome);
                                 return especialidadeRepository.save(novaEspecialidade);
                             }))
-                    .toList();
-
+                    .collect(Collectors.toList());
+    
             plano.setEspecialidades(especialidades);
             return plano;
-        }).toList();
-
-        convenioModel.setPlanos(novosPlanos);
+        }).collect(Collectors.toList());
+    
+        // Add all new plans to the existing collection instead of replacing it
+        planosExistentes.addAll(novosPlanos);
+        
         convenio.save(convenioModel);
     }
     public void atualizarConvenio(Long id, ConvenioRequest convenioRequest) throws Exception {
