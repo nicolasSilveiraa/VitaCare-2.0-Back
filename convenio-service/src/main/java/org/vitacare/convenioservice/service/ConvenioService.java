@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.vitacare.convenioservice.model.Planos;
+import org.vitacare.convenioservice.repository.PlanoRepository;
 import org.vitacare.dtos.healthplan.ConvenioComPlanosRequest;
 import org.vitacare.dtos.healthplan.ConvenioRequest;
 import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioCadastradoExceptions;
 import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioNaoExisteException;
 import org.vitacare.convenioservice.model.ConvenioModel;
 import org.vitacare.convenioservice.repository.ConvenioRepository;
+import org.vitacare.dtos.healthplan.PlanosRequest;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class ConvenioService {
 
     private final ConvenioRepository convenio;
     private final ObjectMapper objectMapper;
+    private final PlanoRepository planoRepository;
 
 
     public List<ConvenioModel> listaConvenio() {
@@ -49,7 +52,7 @@ public class ConvenioService {
         convenio.save(convenioModel);
     }
 
-    public void cadastrarConvenioComPlanos(ConvenioComPlanosRequest request) {
+    public void cadastrarConvenioComPlanos(ConvenioComPlanosRequest request) throws Exception{
         ConvenioModel convenioModel = new ConvenioModel();
         convenioModel.setNomeConvenio(request.nomeConvenio());
         convenioModel.setCnpjConvenio(request.cnpjConvenio());
@@ -65,7 +68,40 @@ public class ConvenioService {
         convenio.save(convenioModel);
     }
 
+    public void alterarConvenioComPlanos(Long idConvenio, ConvenioComPlanosRequest request) throws Exception {
+        verificarConvenioExiste(idConvenio);
+        ConvenioModel convenioModel = convenio.getReferenceById(idConvenio);
 
+        convenioModel.setNomeConvenio(request.nomeConvenio());
+        convenioModel.setCnpjConvenio(request.cnpjConvenio());
+
+        List<Planos> planosAtuais = convenioModel.getPlanos();
+
+        List<String> nomesPlanosRequest = request.planos().stream()
+                .map(PlanosRequest::nome)
+                .map(String::toLowerCase)
+                .toList();
+
+        planosAtuais.removeIf(plano -> !nomesPlanosRequest.contains(plano.getNome().toLowerCase()));
+
+        for (PlanosRequest planoReq : request.planos()) {
+            Planos planoExistente = planosAtuais.stream()
+                    .filter(p -> p.getNome().equalsIgnoreCase(planoReq.nome()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (planoExistente != null) {
+                planoExistente.setNome(planoReq.nome());
+            } else {
+                Planos novoPlano = new Planos();
+                novoPlano.setNome(planoReq.nome());
+                novoPlano.setConvenioModel(convenioModel);
+                planosAtuais.add(novoPlano);
+            }
+        }
+
+        convenio.save(convenioModel);
+    }
     public void atualizarConvenio(Long id, ConvenioRequest convenioRequest) throws Exception {
         verificarConvenioExiste(id);
         ConvenioModel convenioModel = objectMapper.convertValue(convenioRequest, ConvenioModel.class);

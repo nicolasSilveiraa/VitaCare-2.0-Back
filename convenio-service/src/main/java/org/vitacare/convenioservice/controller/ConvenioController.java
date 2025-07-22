@@ -37,10 +37,9 @@ public class ConvenioController {
         convenioService.cadastrarConvenioComPlanos(convenioComPlanosRequest);
     }
 
-
     @PutMapping("{id}")
-    public void atualizarConvenio(@RequestBody ConvenioRequest convenioRequest, @PathVariable Long id) throws Exception {
-        convenioService.atualizarConvenio(id, convenioRequest);
+    public void alterarPlanoComConvenio(@RequestBody ConvenioComPlanosRequest convenioRequest, @PathVariable Long id) throws Exception {
+        convenioService.alterarConvenioComPlanos(id, convenioRequest);
     }
 
     @DeleteMapping("{id}")
