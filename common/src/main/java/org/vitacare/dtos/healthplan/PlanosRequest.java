@@ -5,5 +5,5 @@ import java.util.List;
 public record PlanosRequest(
         String nome,
         Long idConvenio,
-        List<Long> especialidadeDoPlano
+        List<EspecialidadeEnum> especialidades
 ) { }

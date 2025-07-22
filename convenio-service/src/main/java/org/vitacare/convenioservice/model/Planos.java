@@ -31,8 +31,13 @@ public class Planos {
     @JsonBackReference
     private ConvenioModel convenioModel;
 
-    @OneToMany(mappedBy = "planos")
-    @JsonIgnore
-    private List<EspecialidadeDoPlanoModel> especialidadeDoPlanos;
+    @ManyToMany
+    @JoinTable(
+            name = "plano_especialidade",
+            joinColumns = @JoinColumn(name = "plano_id"),
+            inverseJoinColumns = @JoinColumn(name = "especialidade_id")
+    )
+    private List<Especialidade> especialidades;
+
 
 }

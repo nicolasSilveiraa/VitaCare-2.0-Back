@@ -3,7 +3,9 @@ package org.vitacare.convenioservice.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.vitacare.convenioservice.model.Especialidade;
 import org.vitacare.convenioservice.model.Planos;
+import org.vitacare.convenioservice.repository.EspecialidadeRepository;
 import org.vitacare.convenioservice.repository.PlanoRepository;
 import org.vitacare.dtos.healthplan.ConvenioComPlanosRequest;
 import org.vitacare.dtos.healthplan.ConvenioRequest;
@@ -11,8 +13,10 @@ import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioCadast
 import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioNaoExisteException;
 import org.vitacare.convenioservice.model.ConvenioModel;
 import org.vitacare.convenioservice.repository.ConvenioRepository;
+import org.vitacare.dtos.healthplan.EspecialidadeEnum;
 import org.vitacare.dtos.healthplan.PlanosRequest;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -22,6 +26,7 @@ public class ConvenioService {
     private final ConvenioRepository convenio;
     private final ObjectMapper objectMapper;
     private final PlanoRepository planoRepository;
+    private final EspecialidadeRepository especialidadeRepository;
 
 
     public List<ConvenioModel> listaConvenio() {
@@ -52,7 +57,7 @@ public class ConvenioService {
         convenio.save(convenioModel);
     }
 
-    public void cadastrarConvenioComPlanos(ConvenioComPlanosRequest request) throws Exception{
+    public void cadastrarConvenioComPlanos(ConvenioComPlanosRequest request) throws Exception {
         ConvenioModel convenioModel = new ConvenioModel();
         convenioModel.setNomeConvenio(request.nomeConvenio());
         convenioModel.setCnpjConvenio(request.cnpjConvenio());
@@ -61,12 +66,24 @@ public class ConvenioService {
             Planos plano = new Planos();
             plano.setNome(planoReq.nome());
             plano.setConvenioModel(convenioModel);
+
+            List<EspecialidadeEnum> especialidadesEnum = planoReq.especialidades() != null
+                    ? planoReq.especialidades()
+                    : Collections.<EspecialidadeEnum>emptyList();
+
+            List<Especialidade> especialidades = especialidadesEnum.stream()
+                    .map(enumNome -> especialidadeRepository.findByNome(enumNome)
+                            .orElseThrow(() -> new RuntimeException("Especialidade não encontrada: " + enumNome)))
+                    .toList();
+
+            plano.setEspecialidades(especialidades);
             return plano;
         }).toList();
 
         convenioModel.setPlanos(listaPlanos);
         convenio.save(convenioModel);
     }
+
 
     public void alterarConvenioComPlanos(Long idConvenio, ConvenioComPlanosRequest request) throws Exception {
         verificarConvenioExiste(idConvenio);
