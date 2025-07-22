@@ -1,5 +1,6 @@
 package org.vitacare.convenioservice.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class Planos {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_convenio")
+    @JsonBackReference
     private ConvenioModel convenioModel;
 
     @OneToMany(mappedBy = "planos")

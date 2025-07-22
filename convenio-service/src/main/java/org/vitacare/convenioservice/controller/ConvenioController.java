@@ -2,6 +2,7 @@ package org.vitacare.convenioservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.vitacare.dtos.healthplan.ConvenioComPlanosRequest;
 import org.vitacare.dtos.healthplan.ConvenioRequest;
 import org.vitacare.convenioservice.model.ConvenioModel;
 import org.vitacare.convenioservice.service.ConvenioService;
@@ -30,6 +31,12 @@ public class ConvenioController {
     public void cadastrarConvenio(@RequestBody ConvenioRequest convenioRequest) throws Exception {
         convenioService.cadastrarConvenio(convenioRequest);
     }
+
+    @PostMapping("/com-planos")
+    public void cadastrarPlanoComConvenio(@RequestBody ConvenioComPlanosRequest convenioComPlanosRequest) throws Exception {
+        convenioService.cadastrarConvenioComPlanos(convenioComPlanosRequest);
+    }
+
 
     @PutMapping("{id}")
     public void atualizarConvenio(@RequestBody ConvenioRequest convenioRequest, @PathVariable Long id) throws Exception {

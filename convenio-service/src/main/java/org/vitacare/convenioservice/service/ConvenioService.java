@@ -3,6 +3,8 @@ package org.vitacare.convenioservice.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.vitacare.convenioservice.model.Planos;
+import org.vitacare.dtos.healthplan.ConvenioComPlanosRequest;
 import org.vitacare.dtos.healthplan.ConvenioRequest;
 import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioCadastradoExceptions;
 import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioNaoExisteException;
@@ -46,6 +48,23 @@ public class ConvenioService {
         ConvenioModel convenioModel = objectMapper.convertValue(convenioRequest, ConvenioModel.class);
         convenio.save(convenioModel);
     }
+
+    public void cadastrarConvenioComPlanos(ConvenioComPlanosRequest request) {
+        ConvenioModel convenioModel = new ConvenioModel();
+        convenioModel.setNomeConvenio(request.nomeConvenio());
+        convenioModel.setCnpjConvenio(request.cnpjConvenio());
+
+        List<Planos> listaPlanos = request.planos().stream().map(planoReq -> {
+            Planos plano = new Planos();
+            plano.setNome(planoReq.nome());
+            plano.setConvenioModel(convenioModel);
+            return plano;
+        }).toList();
+
+        convenioModel.setPlanos(listaPlanos);
+        convenio.save(convenioModel);
+    }
+
 
     public void atualizarConvenio(Long id, ConvenioRequest convenioRequest) throws Exception {
         verificarConvenioExiste(id);

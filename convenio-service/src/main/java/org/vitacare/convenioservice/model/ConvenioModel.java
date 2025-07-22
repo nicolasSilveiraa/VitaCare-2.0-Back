@@ -1,6 +1,7 @@
 package org.vitacare.convenioservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,8 +29,8 @@ public class ConvenioModel {
     @Column(name = "cnpj")
     private String cnpjConvenio;
 
-    @OneToMany(mappedBy = "convenioModel")
-    @JsonIgnore
+    @OneToMany(mappedBy = "convenioModel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Planos> planos;
 
 }
