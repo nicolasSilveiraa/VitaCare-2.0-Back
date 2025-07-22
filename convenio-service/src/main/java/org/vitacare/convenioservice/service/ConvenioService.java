@@ -9,6 +9,8 @@ import org.vitacare.convenioservice.repository.EspecialidadeRepository;
 import org.vitacare.convenioservice.repository.PlanoRepository;
 import org.vitacare.dtos.healthplan.ConvenioComPlanosRequest;
 import org.vitacare.dtos.healthplan.ConvenioRequest;
+import org.vitacare.dtos.healthplan.ConvenioComPlanosResponse;
+import org.vitacare.dtos.healthplan.PlanoComEspecialidadesResponse;
 import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioCadastradoExceptions;
 import org.vitacare.convenioservice.exceptions.convenioExceptions.ConvenioNaoExisteException;
 import org.vitacare.convenioservice.model.ConvenioModel;
@@ -73,7 +75,11 @@ public class ConvenioService {
 
             List<Especialidade> especialidades = especialidadesEnum.stream()
                     .map(enumNome -> especialidadeRepository.findByNome(enumNome)
-                            .orElseThrow(() -> new RuntimeException("Especialidade não encontrada: " + enumNome)))
+                            .orElseGet(() -> {
+                                Especialidade novaEspecialidade = new Especialidade();
+                                novaEspecialidade.setNome(enumNome);
+                                return especialidadeRepository.save(novaEspecialidade);
+                            }))
                     .toList();
 
             plano.setEspecialidades(especialidades);
@@ -92,31 +98,34 @@ public class ConvenioService {
         convenioModel.setNomeConvenio(request.nomeConvenio());
         convenioModel.setCnpjConvenio(request.cnpjConvenio());
 
-        List<Planos> planosAtuais = convenioModel.getPlanos();
+        // Limpar planos existentes
+        convenioModel.getPlanos().clear();
 
-        List<String> nomesPlanosRequest = request.planos().stream()
-                .map(PlanosRequest::nome)
-                .map(String::toLowerCase)
-                .toList();
+        // Criar novos planos com especialidades
+        List<Planos> novosPlanos = request.planos().stream().map(planoReq -> {
+            Planos plano = new Planos();
+            plano.setNome(planoReq.nome());
+            plano.setConvenioModel(convenioModel);
 
-        planosAtuais.removeIf(plano -> !nomesPlanosRequest.contains(plano.getNome().toLowerCase()));
+            // Processar especialidades (igual ao método de cadastro)
+            List<EspecialidadeEnum> especialidadesEnum = planoReq.especialidades() != null
+                    ? planoReq.especialidades()
+                    : Collections.<EspecialidadeEnum>emptyList();
 
-        for (PlanosRequest planoReq : request.planos()) {
-            Planos planoExistente = planosAtuais.stream()
-                    .filter(p -> p.getNome().equalsIgnoreCase(planoReq.nome()))
-                    .findFirst()
-                    .orElse(null);
+            List<Especialidade> especialidades = especialidadesEnum.stream()
+                    .map(enumNome -> especialidadeRepository.findByNome(enumNome)
+                            .orElseGet(() -> {
+                                Especialidade novaEspecialidade = new Especialidade();
+                                novaEspecialidade.setNome(enumNome);
+                                return especialidadeRepository.save(novaEspecialidade);
+                            }))
+                    .toList();
 
-            if (planoExistente != null) {
-                planoExistente.setNome(planoReq.nome());
-            } else {
-                Planos novoPlano = new Planos();
-                novoPlano.setNome(planoReq.nome());
-                novoPlano.setConvenioModel(convenioModel);
-                planosAtuais.add(novoPlano);
-            }
-        }
+            plano.setEspecialidades(especialidades);
+            return plano;
+        }).toList();
 
+        convenioModel.setPlanos(novosPlanos);
         convenio.save(convenioModel);
     }
     public void atualizarConvenio(Long id, ConvenioRequest convenioRequest) throws Exception {
@@ -131,5 +140,25 @@ public class ConvenioService {
         convenio.deleteById(id);
     }
 
-
+    public ConvenioComPlanosResponse buscarConvenioComPlanosResponse(Long id) throws Exception {
+        verificarConvenioExiste(id);
+        ConvenioModel convenioModel = convenio.findById(id).get();
+        
+        List<PlanoComEspecialidadesResponse> planosResponse = convenioModel.getPlanos().stream()
+            .map(plano -> new PlanoComEspecialidadesResponse(
+                plano.getId(),
+                plano.getNome(),
+                plano.getEspecialidades().stream()
+                    .map(Especialidade::getNome)
+                    .toList()
+            ))
+            .toList();
+        
+        return new ConvenioComPlanosResponse(
+            convenioModel.getIdConvenio(),
+            convenioModel.getNomeConvenio(),
+            convenioModel.getCnpjConvenio(),
+            planosResponse
+        );
+    }
 }

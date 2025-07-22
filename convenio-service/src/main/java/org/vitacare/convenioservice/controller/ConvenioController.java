@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.vitacare.dtos.healthplan.ConvenioComPlanosRequest;
 import org.vitacare.dtos.healthplan.ConvenioRequest;
+import org.vitacare.dtos.healthplan.ConvenioComPlanosResponse;
 import org.vitacare.convenioservice.model.ConvenioModel;
 import org.vitacare.convenioservice.service.ConvenioService;
 
@@ -23,8 +24,8 @@ public class ConvenioController {
     }
 
     @GetMapping("{id}")
-    public ConvenioModel getConvenioPorId(@PathVariable Long id) throws Exception {
-        return convenioService.buscarConvenioPorId(id);
+    public ConvenioComPlanosResponse getConvenioPorId(@PathVariable Long id) throws Exception {
+        return convenioService.buscarConvenioComPlanosResponse(id);
     }
 
     @PostMapping
