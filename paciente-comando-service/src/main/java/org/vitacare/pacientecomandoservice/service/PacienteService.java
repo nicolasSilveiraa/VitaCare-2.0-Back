@@ -54,7 +54,7 @@ public class PacienteService {
             try {
                 convenioClient.buscarPlanoPorId(pacienteCreateRequest.idPlano());
             } catch (FeignException.NotFound e) {
-                throw new InvalidRequestException("O plano de saude com ID " +  pacienteCreateRequest.idPlano() + "não foi encontrado.");
+                throw new InvalidRequestException("O plano de saude com ID " +  pacienteCreateRequest.idPlano() + " não foi encontrado.");
             } catch (FeignException.Forbidden e) {
                 throw new InvalidRequestException("Acesso negado ao buscar dados do paciente com ID " + ". Verifique as permissões.");
             }

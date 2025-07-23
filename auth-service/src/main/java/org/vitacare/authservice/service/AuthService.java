@@ -58,8 +58,10 @@ public class AuthService {
 
         }
 
-        Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new IllegalStateException("Cargo Default nao encontrado"));
+        Role userRole = roleRepository.findByName(request.getRoleName())
+                .orElseThrow(() -> new IllegalStateException("O perfil " + request.getRoleName() + " não é valido"));
+
+
 
         User user = User.builder()
                 .email(request.getEmail())

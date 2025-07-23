@@ -1,6 +1,7 @@
 package org.vitacare.authservice.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
@@ -17,4 +18,7 @@ public class RegisterRequest {
 
     @NotEmpty(message = "Senha não deve ser vazio")
     private String password;
+
+    @NotBlank(message = "O perfiL do usuário é obrigatório")
+    private String roleName;
 }

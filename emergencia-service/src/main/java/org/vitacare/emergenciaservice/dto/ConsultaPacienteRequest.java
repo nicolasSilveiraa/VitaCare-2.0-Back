@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ConsultaPacienteRequest {
 
-    private String diagnosticoPaciente;
-    private String prescricaoPaciente;
+    private String diagnostico;
+    private String prescricao;
 }

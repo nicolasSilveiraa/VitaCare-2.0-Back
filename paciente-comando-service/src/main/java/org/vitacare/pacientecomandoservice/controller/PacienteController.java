@@ -19,7 +19,6 @@ public class PacienteController {
 
     private final PacienteService pacienteService;
 
-    //TODO: MOVER OS METODOS GET PARA O PACIENTE-CONSULTA-SERVICE
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
     public List<PacienteModel> getPaciente() {

@@ -6,7 +6,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.vitacare.emergenciaservice.model.PacienteModel;
+import org.vitacare.emergenciaservice.model.AtendimentoEmergenciaModel;
 import org.vitacare.emergenciaservice.service.PaginacaoService;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class PaginacaoController {
     private PaginacaoService paginacaoService;
 
     @GetMapping
-    public List<PacienteModel> paginas(@PageableDefault(page = 0, size = 5, sort = "idPaciente") Pageable pageable) {
+    public List<AtendimentoEmergenciaModel> paginas(@PageableDefault(page = 0, size = 5, sort = "idPaciente") Pageable pageable) {
 
         return paginacaoService.paginacaoPacienteRequests(pageable).getContent();
     }
