@@ -69,8 +69,22 @@ public class PacienteService {
     public void alterarPaciente(PacienteCreateRequest pacienteCreateRequest, Long id) throws Exception {
         verificarPacienteExiste(id);
         PacienteModel pacienteModel = objectMapper.convertValue(pacienteCreateRequest, PacienteModel.class);
-        PlanosResponse planosResponse = convenioClient.buscarPlanoPorId(pacienteCreateRequest.idPlano());
-        pacienteModel.setIdPaciente(planosResponse.id());
+        
+        pacienteModel.setIdPaciente(id);
+        
+        if (pacienteCreateRequest.convenio() && pacienteCreateRequest.idPlano() != null) {
+            try {
+                convenioClient.buscarPlanoPorId(pacienteCreateRequest.idPlano());
+                pacienteModel.setIdPlano(pacienteCreateRequest.idPlano());
+            } catch (FeignException.NotFound e) {
+                throw new InvalidRequestException("O plano de saúde com ID " + pacienteCreateRequest.idPlano() + " não foi encontrado.");
+            } catch (FeignException.Forbidden e) {
+                throw new InvalidRequestException("Acesso negado ao buscar dados do plano com ID " + pacienteCreateRequest.idPlano() + ". Verifique as permissões.");
+            }
+        } else {
+            pacienteModel.setIdPlano(null);
+        }
+        
         paciente.save(pacienteModel);
     }
 
@@ -94,18 +108,18 @@ public class PacienteService {
         );
     }
 
-    private PacienteResponse convertToResponseDTO(PacienteModel paciente) {
-        return new PacienteResponse(
-                paciente.getIdPaciente(),
-                paciente.getNomePaciente(),
-                paciente.getDataNascimento(),
-                paciente.getSexoPaciente(),
-                paciente.getEndereco(),
-                paciente.getConvenio(),
-                paciente.getIdPlano(),
-                paciente.getCpf()
-        );
-    }
+//    private PacienteResponse convertToResponseDTO(PacienteModel paciente) {
+//        return new PacienteResponse(
+//                paciente.getIdPaciente(),
+//                paciente.getNomePaciente(),
+//                paciente.getCpf(),
+//                paciente.getDataNascimento(),
+//                paciente.getSexoPaciente(),
+//                paciente.getEndereco(),
+//                paciente.getConvenio(),
+//                paciente.convenioComPlanosResponse()
+//        );
+//    }
 
 
 }
