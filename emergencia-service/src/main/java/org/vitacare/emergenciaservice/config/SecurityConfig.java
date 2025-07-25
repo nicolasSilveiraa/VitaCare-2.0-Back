@@ -1,40 +1,45 @@
-package org.vitacare.pacientecomandoservice.config;
+package org.vitacare.emergenciaservice.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.vitacare.pacientecomandoservice.config.JwtAuthFilter;
+import org.vitacare.security.CustomAccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final JwtAuthFilter jwtAuthFilter;
-
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http) throws Exception {
+            HttpSecurity http,
+            JwtAuthFilter jwtAuthFilter,
+            CustomAccessDeniedHandler accessDeniedHandler
+    ) throws Exception {
+
         http
                 .csrf(csrf -> csrf.disable())
-
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .authorizeHttpRequests(auth -> auth
-
-                        .requestMatchers("/api/v1/pacientes/**").authenticated()
-                        .anyRequest().authenticated()
+                // Configura os handlers de exceção
+                .exceptionHandling(exceptions ->
+                        exceptions.accessDeniedHandler(accessDeniedHandler)
                 )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+                // Adiciona o filtro JWT
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+
+                // Define as regras de autorização
+                .authorizeHttpRequests(auth -> auth
+                        // Exemplo de regra para um serviço genérico
+                        .anyRequest().authenticated()
+                );
 
         return http.build();
     }
+
 }

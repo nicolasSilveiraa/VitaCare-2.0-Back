@@ -88,7 +88,7 @@ public class ProfessionalService {
 
         updates.forEach((key, value) -> {
             switch (key) {
-                case "fullName":
+                case "nomePacientefullName":
                     professionalToUpdate.setFullName((String) value);
                     break;
                 case "professionalLicense":

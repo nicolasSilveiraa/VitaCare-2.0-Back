@@ -1,0 +1,153 @@
+services:
+
+  service-registry:
+    build: ./service-registry
+    container_name: vitacare_service_registry
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  config-server:
+    build: ./config-server
+    container_name: vitacare_config_server
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      # Seus segredos para o Git
+      - GIT_USERNAME=Math23Kskb
+      - GIT_PASSWORD=ghp_SEU_PAT_AQUI
+    depends_on:
+      service-registry:
+        condition: service_healthy
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: vitacare_api_gateway
+    ports:
+      - "9000:9000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+    depends_on:
+      - service-registry
+      - config-server
+
+  postgres-db:
+    image: postgres:15
+    container_name: vitacare_postgres_db
+    environment:
+      - POSTGRES_USER=vitacare_user
+      - POSTGRES_PASSWORD=vitacare_password
+      - POSTGRES_DB=vitacare_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - vitacare_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vitacare_user -d vitacare_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  auth-service:
+    build: ./auth-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+
+      - DB_USERNAME=vitacare_user
+      - DB_PASSWORD=vitacare_password
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+      config-server:
+        condition: service_started
+
+
+  professional-service:
+    build: ./professional-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - DB_USERNAME=vitacare_user
+      - DB_PASSWORD=vitacare_password
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+      config-server:
+        condition: service_started
+
+  emergencia-service:
+    build: ./emergencia-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - DB_USERNAME=vitacare_user
+      - DB_PASSWORD=vitacare_password
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+      config-server:
+        condition: service_started
+
+
+  paciente-comando-service:
+    build: ./paciente-comando-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - DB_USERNAME=vitacare_user
+      - DB_PASSWORD=vitacare_password
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+      config-server:
+        condition: service_started
+
+  convenio-service:
+    build: ./convenio-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - DB_USERNAME=vitacare_user
+      - DB_PASSWORD=vitacare_password
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+      config-server:
+        condition: service_started
+
+  agendamento-service:
+    build: ./agendamento-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - DB_USERNAME=vitacare_user
+      - DB_PASSWORD=vitacare_password
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      service-registry:
+        condition: service_started
+      config-server:
+        condition: service_started
+
+volumes:
+  vitacare_postgres_data:

@@ -6,12 +6,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.vitacare.dtos.patient.PacienteResponse;
 import org.vitacare.dtos.patient.PacienteSummaryDTO;
 
-@FeignClient(name = "paciente-comando-service")
+import java.util.List;
+
+@FeignClient(name = "paciente-comando-service", path = "/api/v1/pacientes")
 public interface PacienteQueryClient {
 
-    @GetMapping("/api/v1/pacientes/{id}")
+    @GetMapping("/{id}")
     PacienteResponse getPacienteById(@PathVariable("id") Long id);
 
-    @GetMapping("/api/v1/pacientes/{id}/summary")
+    @GetMapping("/{id}/summary")
     PacienteSummaryDTO getPacienteSummaryById(@PathVariable("id") Long id);
+
+    @GetMapping("/api/v1/pacientes")
+    List<PacienteSummaryDTO> getAllPacientes();
 }

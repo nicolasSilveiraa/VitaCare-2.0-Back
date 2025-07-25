@@ -2,10 +2,13 @@ package org.vitacare.emergenciaservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.vitacare.dtos.patient.PacienteSummaryDTO;
 import org.vitacare.dtos.patient.emergencia.*;
 import org.vitacare.emergenciaservice.service.EmergenciaService;
 import java.util.List;
@@ -20,14 +23,14 @@ public class EmergenciaController {
 
 
     @PostMapping("/check-in")
-    @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPCIONISTA')")
     public ResponseEntity<AtendimentoEmergenciaResponse> darEntradaPaciente(@Valid @RequestBody CheckInRequest request) {
         AtendimentoEmergenciaResponse response = emergenciaService.darEntradaPaciente(request.pacienteId());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PatchMapping("/{atendimentoId}/triagem")
-    @PreAuthorize("hasRole('NURSE')")
+    @PreAuthorize("hasAnyRole('ROLE_ENFERMEIRA')")
     public ResponseEntity<AtendimentoEmergenciaResponse> realizarTriagem(
             @PathVariable Long atendimentoId,
             @Valid @RequestBody TriagemRequest request) {
@@ -35,7 +38,7 @@ public class EmergenciaController {
     }
 
     @PatchMapping("/{atendimentoId}/consulta")
-    @PreAuthorize("hasRole('DOCTOR')")
+    @PreAuthorize("hasRole('ROLE_MEDICO')")
     public ResponseEntity<AtendimentoEmergenciaResponse> realizarConsulta(
             @PathVariable Long atendimentoId,
             @Valid @RequestBody ConsultaRequest request) {
@@ -49,8 +52,18 @@ public class EmergenciaController {
     }
 
     @GetMapping("/fila")
-    @PreAuthorize("hasAnyRole('NURSE', 'DOCTOR')")
-    public ResponseEntity<List<FilaAtendimentoResponse>> buscarFila(@RequestParam("status") StatusAtendimento status) {
-        return ResponseEntity.ok(emergenciaService.buscarFilaPorStatus(status));
+    public ResponseEntity<Page<FilaAtendimentoResponse>> buscarFilaDeAtendimento(
+            @RequestParam String status,
+            Pageable pageable) {
+
+        StatusAtendimento statusEnum = StatusAtendimento.valueOf(status.toUpperCase());
+        Page<FilaAtendimentoResponse> paginaDeAtendimentos = emergenciaService.buscarFilaPorStatusPaginado(statusEnum, pageable);
+        return ResponseEntity.ok(paginaDeAtendimentos);
+    }
+
+    @GetMapping("/disponiveis")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_ENFERMEIRA', 'ROLE_MEDICO')")
+    public ResponseEntity<List<PacienteSummaryDTO>> listarPacientesDisponiveis() {
+        return ResponseEntity.ok(emergenciaService.listarPacientesDisponiveis());
     }
 }

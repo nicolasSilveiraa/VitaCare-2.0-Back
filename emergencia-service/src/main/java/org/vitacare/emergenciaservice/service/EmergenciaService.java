@@ -2,6 +2,8 @@ package org.vitacare.emergenciaservice.service;
 
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.vitacare.dtos.patient.PacienteSummaryDTO;
 import org.vitacare.dtos.patient.emergencia.*;
@@ -73,16 +75,18 @@ public class EmergenciaService {
         return enriquecerResposta(atendimentoAtualizado);
     }
 
-    public List<FilaAtendimentoResponse> buscarFilaPorStatus(StatusAtendimento status) {
-        return atendimentoRepository.findByStatus(status).stream()
-                .map(atendimento -> {
-                    PacienteSummaryDTO paciente = validarPaciente(atendimento.getPacienteId());
-                    return new FilaAtendimentoResponse(
-                            atendimento.getId(),
-                            atendimento.getDataHoraChegada(),
-                            paciente
-                    );
-                }).collect(Collectors.toList());
+    public Page<FilaAtendimentoResponse> buscarFilaPorStatusPaginado(StatusAtendimento status, Pageable pageable) {
+
+        Page<AtendimentoEmergenciaModel> paginaDeAtendimentos = atendimentoRepository.findByStatus(status, pageable);
+
+        return paginaDeAtendimentos.map(atendimento -> {
+            PacienteSummaryDTO paciente = validarPaciente(atendimento.getPacienteId());
+       return new FilaAtendimentoResponse(
+                    atendimento.getId(),
+                    atendimento.getDataHoraChegada(),
+                    paciente
+            );
+        });
     }
 
     public List<AtendimentoEmergenciaResponse> buscarTodosAtendimentos() {
@@ -95,6 +99,10 @@ public class EmergenciaService {
     public AtendimentoEmergenciaResponse buscarAtendimentoPorId(Long id) {
         AtendimentoEmergenciaModel atendimento = buscarAtendimentoOuFalhar(id);
         return enriquecerResposta(atendimento);
+    }
+
+    public List<PacienteSummaryDTO> listarPacientesDisponiveis() {
+        return pacienteClient.getAllPacientes();
     }
 
     private AtendimentoEmergenciaModel buscarAtendimentoOuFalhar(Long id) {
