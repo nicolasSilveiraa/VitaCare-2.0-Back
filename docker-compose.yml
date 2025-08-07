@@ -1,153 +1,89 @@
 services:
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: vitacare-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: vitacare_db
+      POSTGRES_USER: vitacare_user
+      POSTGRES_PASSWORD: vitacare_password
+    volumes:
+      - vitacare_postgres_data:/var/lib/postgresql/data
+
 
   service-registry:
-    build: ./service-registry
-    container_name: vitacare_service_registry
+    build:
+      context: .
+      dockerfile: service-registry/Dockerfile
     ports:
       - "8761:8761"
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+    depends_on:
+      postgres-db:
+        condition: service_healthy
 
   config-server:
-    build: ./config-server
-    container_name: vitacare_config_server
+    build:
+      context: .
+      dockerfile: config-server/Dockerfile
     ports:
       - "8888:8888"
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-      # Seus segredos para o Git
-      - GIT_USERNAME=Math23Kskb
-      - GIT_PASSWORD=ghp_SEU_PAT_AQUI
+      GIT_USERNAME: ${GIT_USERNAME}
+      GIT_PASSWORD: ${GIT_PASSWORD}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
     depends_on:
       service-registry:
+        condition: service_healthy
+      postgres-db:
         condition: service_healthy
 
   api-gateway:
-    build: ./api-gateway
-    container_name: vitacare_api_gateway
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
     ports:
       - "9000:9000"
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+    depends_on:
+      service-registry:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      postgres-db:
+        condition: service_healthy
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      GMAIL_APP_GMAIL: ${VITACARE_GMAIL_USERNAME}
+      GMAIL_APP_PASSWORD: ${VITACARE_GMAIL_APP_PASSWORD}
     depends_on:
       - service-registry
       - config-server
-
-  postgres-db:
-    image: postgres:15
-    container_name: vitacare_postgres_db
-    environment:
-      - POSTGRES_USER=vitacare_user
-      - POSTGRES_PASSWORD=vitacare_password
-      - POSTGRES_DB=vitacare_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - vitacare_postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U vitacare_user -d vitacare_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-
-  auth-service:
-    build: ./auth-service
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-
-      - DB_USERNAME=vitacare_user
-      - DB_PASSWORD=vitacare_password
-    depends_on:
-      postgres-db:
-        condition: service_healthy
-      service-registry:
-        condition: service_started
-      config-server:
-        condition: service_started
-
-
-  professional-service:
-    build: ./professional-service
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-      - DB_USERNAME=vitacare_user
-      - DB_PASSWORD=vitacare_password
-    depends_on:
-      postgres-db:
-        condition: service_healthy
-      service-registry:
-        condition: service_started
-      config-server:
-        condition: service_started
-
-  emergencia-service:
-    build: ./emergencia-service
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-      - DB_USERNAME=vitacare_user
-      - DB_PASSWORD=vitacare_password
-    depends_on:
-      postgres-db:
-        condition: service_healthy
-      service-registry:
-        condition: service_started
-      config-server:
-        condition: service_started
-
+      - postgres-db
 
   paciente-comando-service:
-    build: ./paciente-comando-service
+    build:
+      context: .
+      dockerfile: paciente-comando-service/Dockerfile
+    ports:
+      - "8083:8083"
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-      - DB_USERNAME=vitacare_user
-      - DB_PASSWORD=vitacare_password
+      SPRING_PROFILES_ACTIVE: docker
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
     depends_on:
-      postgres-db:
-        condition: service_healthy
-      service-registry:
-        condition: service_started
-      config-server:
-        condition: service_started
-
-  convenio-service:
-    build: ./convenio-service
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-      - DB_USERNAME=vitacare_user
-      - DB_PASSWORD=vitacare_password
-    depends_on:
-      postgres-db:
-        condition: service_healthy
-      service-registry:
-        condition: service_started
-      config-server:
-        condition: service_started
-
-  agendamento-service:
-    build: ./agendamento-service
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
-      - DB_USERNAME=vitacare_user
-      - DB_PASSWORD=vitacare_password
-    depends_on:
-      postgres-db:
-        condition: service_healthy
-      service-registry:
-        condition: service_started
-      config-server:
-        condition: service_started
+      - service-registry
+      - config-server
+      - postgres-db
 
 volumes:
   vitacare_postgres_data:

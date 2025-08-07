@@ -1,5 +1,5 @@
 #============================================
-#   PACIENTE-COMANDO-SERVICE
+#   CONVENIO-SERVICE
 #============================================
 FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
@@ -38,13 +38,12 @@ COPY professional-service/src ./professional-service/src/
 COPY agendamento-service/src ./agendamento-service/src/
 COPY emergencia-service/src ./emergencia-service/src/
 
-RUN mvn clean package -DskipTests -pl paciente-comando-service -am
+RUN mvn clean package -DskipTests -pl convenio-service -am
 
 FROM eclipse-temurin:17-jre-focal
 WORKDIR /app
 
-COPY --from=build /app/paciente-comando-service/target/*.jar app.jar
-
-EXPOSE 8087
+COPY --from=build /app/convenio-service/target/*.jar app.jar
+EXPOSE 8083
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
