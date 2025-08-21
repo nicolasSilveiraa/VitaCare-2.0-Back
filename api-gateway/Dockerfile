@@ -21,29 +21,15 @@ COPY professional-service/pom.xml ./professional-service/
 COPY emergencia-service/pom.xml ./emergencia-service/
 COPY service-registry/pom.xml ./service-registry/
 
-RUN mvn dependency:go-offline
+RUN mvn -B dependency:go-offline
 
-COPY common/src ./common/src/
-COPY convenio-client/src ./convenio-client/src/
-COPY professional-client/src ./professional-client/src/
-COPY paciente-client/src ./paciente-client/src/
+COPY . .
 
-COPY service-registry/src ./service-registry/src/
-COPY config-server/src ./config-server/src/
-COPY api-gateway/src ./api-gateway/src/
-COPY auth-service/src ./auth-service/src/
-COPY convenio-service/src ./convenio-service/src/
-COPY paciente-comando-service/src ./paciente-comando-service/src/
-COPY professional-service/src ./professional-service/src/
-COPY agendamento-service/src ./agendamento-service/src/
-COPY emergencia-service/src ./emergencia-service/src/
+RUN mvn -B clean package -DskipTests -pl api-gateway -am
 
-RUN mvn clean package -DskipTests -pl api-gateway -am
-
-FROM eclipse-temurin:17-jre-focal
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
 COPY --from=build /app/api-gateway/target/*.jar app.jar
 EXPOSE 9000
-
 ENTRYPOINT ["java", "-jar", "app.jar"]

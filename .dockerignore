@@ -1,0 +1,25 @@
+# Arquivos e pastas do Git
+.git
+.gitignore
+
+# Arquivos de configuração de IDEs
+.idea/
+*.iml
+.vscode/
+.vercel
+
+# Pastas de build do Maven e logs
+target/
+.mvn/
+*.log
+
+# Arquivos de ambiente e de configuração local
+.env
+.env.*
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de documentação ou extras que não precisam ir para a imagem
+README.md

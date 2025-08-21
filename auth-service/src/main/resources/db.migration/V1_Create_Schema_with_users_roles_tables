@@ -27,10 +27,10 @@ CREATE TABLE IF NOT EXISTS auth_service.users_roles (
 );
 
 
-INSERT INTO auth_service.roles (id, name) VALUES (1, 'ROLE_ADMIN');
-INSERT INTO auth_service.roles (id, name) VALUES (2, 'ROLE_MEDICO');
-INSERT INTO auth_service.roles (id, name) VALUES (3, 'ROLE_ENFERMEIRA');
-INSERT INTO auth_service.roles (id, name) VALUES (4, 'ROLE_RECEPCIONISTA');
+INSERT INTO auth_service.roles (id, name) VALUES (1, 'ROLE_ADMIN') ON CONFLICT (id) DO NOTHING;
+INSERT INTO auth_service.roles (id, name) VALUES (2, 'ROLE_MEDICO') ON CONFLICT (id) DO NOTHING;
+INSERT INTO auth_service.roles (id, name) VALUES (3, 'ROLE_ENFERMEIRA') ON CONFLICT (id) DO NOTHING;
+INSERT INTO auth_service.roles (id, name) VALUES (4, 'ROLE_RECEPCIONISTA') ON CONFLICT (id) DO NOTHING;
 
 
-INSERT INTO auth_service.users (id, email, password, enabled) VALUES (1, 'matheos.kskb@gmail.com', '$2a$10$VYPwHokSJnwyC3Oh4fqade8qRpAfPZimgej2bms36xqWbykJjqyjW', 'TRUE');
+INSERT INTO auth_service.users (id, email, password, enabled) VALUES (1, 'matheos.kskb@gmail.com', '$2a$10$VYPwHokSJnwyC3Oh4fqade8qRpAfPZimgej2bms36xqWbykJjqyjW', 'TRUE') ON CONFLICT (id) DO NOTHING;

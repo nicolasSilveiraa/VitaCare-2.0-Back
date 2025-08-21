@@ -10,6 +10,13 @@ services:
       POSTGRES_PASSWORD: vitacare_password
     volumes:
       - vitacare_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vitacare_user -d vitacare_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vitacare-network
 
 
   service-registry:
@@ -18,9 +25,14 @@ services:
       dockerfile: service-registry/Dockerfile
     ports:
       - "8761:8761"
-    depends_on:
-      postgres-db:
-        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - vitacare-network
 
   config-server:
     build:
@@ -37,6 +49,14 @@ services:
         condition: service_healthy
       postgres-db:
         condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - vitacare-network
 
   api-gateway:
     build:
@@ -54,6 +74,14 @@ services:
         condition: service_healthy
       postgres-db:
         condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - vitacare-network
 
   auth-service:
     build:
@@ -63,13 +91,25 @@ services:
       - "8090:8090"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
-      GMAIL_APP_GMAIL: ${VITACARE_GMAIL_USERNAME}
-      GMAIL_APP_PASSWORD: ${VITACARE_GMAIL_APP_PASSWORD}
+      VITACARE_GMAIL_USERNAME: ${VITACARE_GMAIL_USERNAME}
+      VITACARE_GMAIL_APP_PASSWORD: ${VITACARE_GMAIL_APP_PASSWORD}
     depends_on:
-      - service-registry
-      - config-server
-      - postgres-db
+      postgres-db:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - vitacare-network
 
   paciente-comando-service:
     build:
@@ -79,11 +119,27 @@ services:
       - "8083:8083"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
     depends_on:
-      - service-registry
-      - config-server
-      - postgres-db
+      postgres-db:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8083/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - vitacare-network
 
 volumes:
   vitacare_postgres_data:
+
+networks:
+  vitacare-network:
+    driver: bridge
