@@ -6,12 +6,12 @@ services:
       - "5433:5432"
     environment:
       POSTGRES_DB: vitacare_db
-      POSTGRES_USER: vitacare_user
-      POSTGRES_PASSWORD: vitacare_password
+      POSTGRES_USER: vitacareuser
+      POSTGRES_PASSWORD: vitacarepassword
     volumes:
       - vitacare_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U vitacare_user -d vitacare_db"]
+      test: ["CMD-SHELL", "pg_isready -U vitacareuser -d vitacare_db"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -44,6 +44,7 @@ services:
       GIT_USERNAME: ${GIT_USERNAME}
       GIT_PASSWORD: ${GIT_PASSWORD}
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+      GIT_DEFAULT_LABEL: main
     depends_on:
       service-registry:
         condition: service_healthy
@@ -136,6 +137,34 @@ services:
       start_period: 15s
     networks:
       - vitacare-network
+
+  emergencia-service:
+    build:
+      context: .
+      dockerfile: emergencia-service/Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8082/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - vitacare-network
+
+
 
 volumes:
   vitacare_postgres_data:

@@ -1,0 +1,36 @@
+CREATE SCHEMA IF NOT EXISTS auth_schema;
+
+
+CREATE TABLE IF NOT EXISTS auth_schema.roles (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS auth_schema.users (
+    id BIGSERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    enabled BOOLEAN,
+    refresh_token VARCHAR(512),
+    refresh_token_expiry TIMESTAMP WITHOUT TIME ZONE,
+    password_reset_token VARCHAR(255),
+    password_reset_token_expiry TIMESTAMP WITHOUT TIME ZONE,
+    created_at TIMESTAMP WITHOUT TIME ZONE
+);
+
+CREATE TABLE IF NOT EXISTS auth_schema.users_roles (
+    user_id BIGINT NOT NULL,
+    role_id INTEGER NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    CONSTRAINT fk_users_roles_to_users FOREIGN KEY (user_id) REFERENCES auth_schema.users (id) ON DELETE CASCADE,
+    CONSTRAINT fk_users_roles_to_roles FOREIGN KEY (role_id) REFERENCES auth_schema.roles (id) ON DELETE CASCADE
+);
+
+
+INSERT INTO auth_schema.roles (id, name) VALUES (1, 'ROLE_ADMIN') ON CONFLICT (id) DO NOTHING;
+INSERT INTO auth_schema.roles (id, name) VALUES (2, 'ROLE_MEDICO') ON CONFLICT (id) DO NOTHING;
+INSERT INTO auth_schema.roles (id, name) VALUES (3, 'ROLE_ENFERMEIRA') ON CONFLICT (id) DO NOTHING;
+INSERT INTO auth_schema.roles (id, name) VALUES (4, 'ROLE_RECEPCIONISTA') ON CONFLICT (id) DO NOTHING;
+
+
+INSERT INTO auth_schema.users (id, email, password, enabled) VALUES (1, 'matheos.kskb@gmail.com', '$2a$10$VYPwHokSJnwyC3Oh4fqade8qRpAfPZimgej2bms36xqWbykJjqyjW', 'TRUE') ON CONFLICT (id) DO NOTHING;

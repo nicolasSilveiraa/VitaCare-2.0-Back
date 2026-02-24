@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Table(name= "users", schema = "auth_service")
+@Table(name= "users", schema = "auth_schema")
 @Data
 @Builder
 @NoArgsConstructor
@@ -47,7 +47,7 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
-            schema = "auth_service",
+            schema = "auth_schema",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )

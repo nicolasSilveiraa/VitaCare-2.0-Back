@@ -19,7 +19,7 @@ public class EmailService {
     private String actualSenderEmail;
 
     public void sendPasswordResetEmail(String toEmail, String token) {
-        String resetUrl = "http://localhost:4200/reset-password?token=" + token;
+        String resetUrl = "http://localhost:4200/auth/reset-password?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(actualSenderEmail);

@@ -35,7 +35,7 @@ public class SecurityConfig {
 
                 // Define as regras de autorização
                 .authorizeHttpRequests(auth -> auth
-                        // Exemplo de regra para um serviço genérico
+                        .requestMatchers("/actuator/health").permitAll()
                         .anyRequest().authenticated()
                 );
 

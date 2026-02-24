@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "pacientes")
+@Table(name = "pacientes", schema = "paciente_comando_schema")
 public class PacienteModel {
 
     @Id

@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "roles", schema = "auth_service")
+@Table(name = "roles", schema = "auth_schema")
 @Data
 @Builder
 @NoArgsConstructor
