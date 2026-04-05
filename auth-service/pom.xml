@@ -59,14 +59,10 @@
         <!-- == Banco de Dados & Migração    == -->
         <!-- ================================== -->
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>12.8.1.jre11</version>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>${h2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -74,7 +70,7 @@
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-database-postgresql</artifactId>
+            <artifactId>flyway-sqlserver</artifactId>
         </dependency>
 
         <!-- ================================== -->
