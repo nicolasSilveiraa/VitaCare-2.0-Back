@@ -10,7 +10,7 @@ public class ProfessionalSpecification {
     public static Specification<Professional> hasName(String name) {
         return (root, query, criteriaBuilder) ->
                 name == null ? criteriaBuilder.conjunction() :
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("nomePacientefullName")), "%" + name.toLowerCase() + "%");
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("fullName")), "%" + name.toLowerCase() + "%");
     }
 
     public static Specification<Professional> hasSpecialty(Integer specialtyId) {

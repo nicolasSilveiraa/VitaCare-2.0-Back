@@ -6,7 +6,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-class ProfessionalServiceApplication {
+public class ProfessionalServiceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ProfessionalServiceApplication.class, args);

@@ -20,38 +20,38 @@ public class PacienteController {
     private final PacienteService pacienteService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPCIONISTA', 'ROLE_MEDICO', 'ROLE_ENFERMEIRA')")
     public List<PacienteModel> getPaciente() {
         return pacienteService.buscarPaciente();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPCIONISTA', 'ROLE_MEDICO', 'ROLE_ENFERMEIRA')")
     public PacienteModel getPacienteId(@PathVariable Long id) throws Exception{
         return pacienteService.buscarPacientePorId(id);
     }
 
     @GetMapping("/{id}/summary")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPCIONISTA', 'ROLE_MEDICO', 'ROLE_ENFERMEIRA')")
     public PacienteSummaryDTO getPacienteSummaryId(@PathVariable Long id) throws Exception{
         return pacienteService.buscarPacienteSummaryPorId(id);
     }
 
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPCIONISTA', 'ROLE_MEDICO', 'ROLE_ENFERMEIRA')")
     public void adicionarPaciente(@RequestBody PacienteCreateRequest pacienteCreateRequest) throws Exception {
         pacienteService.cadastrarPaciente(pacienteCreateRequest);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPCIONISTA', 'ROLE_MEDICO', 'ROLE_ENFERMEIRA')")
     public void atualizarPaciente(@RequestBody PacienteCreateRequest pacienteCreateRequest, @PathVariable Long id) throws Exception {
         pacienteService.alterarPaciente(pacienteCreateRequest, id);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPTIONIST', 'ROLE_DOCTOR', 'ROLE_NURSE')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_RECEPCIONISTA', 'ROLE_MEDICO', 'ROLE_ENFERMEIRA')")
     public void excluirPaciente(@PathVariable Long id) throws Exception {
         pacienteService.excluirPaciente(id);
     }
