@@ -38,13 +38,14 @@ public class AgendaModel {
 
     @CreationTimestamp
     @Column(name = "criado_em", nullable = false, updatable = false)
+    private LocalDateTime criadoEm;
+
     @PrePersist
     public void prePersist() {
         if (criadoEm == null) {
             this.criadoEm = LocalDateTime.now().withSecond(0).withNano(0);
         }
     }
-    private LocalDateTime criadoEm;
 
 
 }

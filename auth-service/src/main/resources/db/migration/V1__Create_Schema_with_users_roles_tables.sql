@@ -87,3 +87,9 @@ VALUES (1, 'matheos.kskb@gmail.com', '$2a$10$VYPwHokSJnwyC3Oh4fqade8qRpAfPZimgej
 SET IDENTITY_INSERT auth_schema.users OFF;
 END
 GO
+
+IF NOT EXISTS (SELECT 1 FROM auth_schema.users_roles WHERE user_id = 1 AND role_id = 1)
+BEGIN
+INSERT INTO auth_schema.users_roles (user_id, role_id) VALUES (1, 1);
+END
+GO

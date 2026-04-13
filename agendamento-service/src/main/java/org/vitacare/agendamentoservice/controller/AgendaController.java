@@ -12,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.vitacare.agendamentoservice.AgendamentoServiceApplication;
 import org.vitacare.dtos.appointment.AgendaCreateRequest;
-import org.vitacare.agendamentoservice.model.AgendaModel;
 import org.vitacare.agendamentoservice.service.AgendaService;
 import org.vitacare.dtos.appointment.AgendamentoResponse;
 
